@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">疯狂购物</string>
+    <string name="action_settings">Settings</string>
+    <string name="home_text">主页</string>
+    <string name="type_text">分类</string>
+    <string name="car_text">购物车</string>
+    <string name="user_text">账户</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_text">搜索宝贝</string>
+    <string name="title_activity_search_article_artivity">SearchArticleArtivity</string>
+</resources>
