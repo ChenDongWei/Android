@@ -46,10 +46,14 @@ public class ShopService {
 
     }
 
-    public static List<Article> searchArticleByWord(String word) {
+    public static Object[] searchArticleByWord(String word, int pageIndex) {
 
         try {
+            Object[] objs = new Object[2];
+
             Map<String,Object> params = new HashMap<>();
+            params.put("pageIndex", pageIndex);
+
             if (word != null && word != ""){
                 params.put("title", word);
             }
@@ -57,9 +61,15 @@ public class ShopService {
             String result = HttpUtils.sendPost("android/article.action",params);
             JSONObject jsonObject = new JSONObject(result);
             JSONArray jsonArray = jsonObject.getJSONArray("items");
+            /** 获取当前商品分页总数 */
+            int totalSize = jsonObject.getInt("totalSize");
 
+            objs[0] = totalSize;
+
+            List<Article> articles = null;
             if(jsonArray!=null&&jsonArray.length() > 0){
-                List<Article> articles = new ArrayList<>();
+
+                articles = new ArrayList<>();
                 for(int i = 0 ; i < jsonArray.length() ; i++){
                     JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                     Article article = new Article();
@@ -70,9 +80,10 @@ public class ShopService {
                     article.bitmap = HttpUtils.getBitmapByImage(jsonObject1.getString("image"));
                     articles.add(article);
                 }
-                return articles;
+
             }
-            return null;
+            objs[1] = articles;
+            return objs;
         }catch (Exception e){
             e.printStackTrace();
         }
