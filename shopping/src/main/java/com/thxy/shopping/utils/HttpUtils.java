@@ -14,7 +14,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +48,8 @@ public class HttpUtils {
         return null;
     }
 
-    public static Bitmap getBitmapByImage(String name) throws Exception {
-        URL url = new URL(Commons.SERVER_IP + "images/article/" + name);
+    public static Bitmap getBitmapByImage(String uri) throws Exception {
+        URL url = new URL(Commons.SERVER_IP + uri);
         InputStream is = url.openStream();
 
         Bitmap bitmap = BitmapFactory.decodeStream(is);

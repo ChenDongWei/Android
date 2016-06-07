@@ -1,6 +1,7 @@
 package com.thxy.shopping.service;
 
 import com.thxy.shopping.dto.Article;
+import com.thxy.shopping.dto.ArticleType;
 import com.thxy.shopping.utils.HttpUtils;
 
 import org.json.JSONArray;
@@ -33,7 +34,7 @@ public class ShopService {
                     article.id = jsonObject1.getString("id");
                     article.title = jsonObject1.getString("title");
                     article.price = jsonObject1.getDouble("price");
-                    article.bitmap = HttpUtils.getBitmapByImage(jsonObject1.getString("image"));
+                    article.bitmap = HttpUtils.getBitmapByImage("images/article/" + jsonObject1.getString("image"));
                     articles.add(article);
                 }
                 return articles;
@@ -77,13 +78,40 @@ public class ShopService {
                     article.title = jsonObject1.getString("title");
                     article.price = jsonObject1.getDouble("price");
                     /** 从服务端将图片下载到客户端 */
-                    article.bitmap = HttpUtils.getBitmapByImage(jsonObject1.getString("image"));
+                    article.bitmap = HttpUtils.getBitmapByImage("images/article/" + jsonObject1.getString("image"));
                     articles.add(article);
                 }
 
             }
             objs[1] = articles;
             return objs;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public static List<ArticleType> getArticleTypes() {
+        try {
+            String result = HttpUtils.sendPost("android/articleType.action", null);
+            /** 将查询出来的商品类型转换成json数组 */
+        List<ArticleType> articleTypes = null;
+        if (result != null){
+            articleTypes = new ArrayList<>();
+            JSONArray jsonArray = new JSONArray(result);
+            for (int i = 0; i < jsonArray.length(); i++){
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                ArticleType articleType = new ArticleType();
+                articleType.code = jsonObject.getString("code");
+                articleType.name = jsonObject.getString("name");
+                articleType.typeLogo = HttpUtils.getBitmapByImage("articleType/" + articleType.code + ".jpg");
+                articleTypes.add(articleType);
+
+            }
+        }
+            return articleTypes;
+
         }catch (Exception e){
             e.printStackTrace();
         }

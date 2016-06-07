@@ -10,4 +10,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search_text">搜索宝贝</string>
     <string name="title_activity_search_article_artivity">SearchArticleArtivity</string>
+    <string name="type_title">商品分类</string>
 </resources>
