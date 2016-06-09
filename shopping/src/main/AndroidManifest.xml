@@ -13,7 +13,7 @@
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -26,7 +26,8 @@
         <activity
             android:name=".activity.SearchArticleArtivity"
             android:label="@string/title_activity_search_article_artivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.SecondTypeActivity"></activity>
     </application>
 
 </manifest>

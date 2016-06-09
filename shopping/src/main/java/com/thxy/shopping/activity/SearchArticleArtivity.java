@@ -138,7 +138,7 @@ public class SearchArticleArtivity extends Activity {
                     articles.clear();
                 }
 
-                Object[] objs = ShopService.searchArticleByWord(word.getText().toString(), pageIndex);
+                Object[] objs = ShopService.searchArticleByWord(word.getText().toString(), pageIndex, null);
                 totalSize = (int) objs[0];
 
                 List<Article> searchArticles = (List<Article>) objs[1];

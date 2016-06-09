@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.thxy.shopping.activity.SecondTypeActivity">
+
+    <include layout="@layout/layout_type_title_bar" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <!-- 水平导航菜单栏  -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <RadioGroup
+                android:id="@+id/rg_secondType"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+
+            </RadioGroup>
+        </HorizontalScrollView>
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:background="@color/gray"
+
+        />
+
+    <!-- 线性容器展示商品 -->
+    <ListView
+        android:id="@+id/lv_secondType"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@color/gray"
+        android:dividerHeight="6dp">
+
+
+    </ListView>
+
+
+</LinearLayout>
