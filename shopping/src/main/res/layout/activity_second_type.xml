@@ -8,13 +8,11 @@
 
     <include layout="@layout/layout_type_title_bar" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp">
+
         <!-- 水平导航菜单栏  -->
         <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
             android:scrollbars="none">
 
             <RadioGroup
@@ -28,7 +26,6 @@
             </RadioGroup>
         </HorizontalScrollView>
 
-    </FrameLayout>
 
     <View
         android:layout_width="match_parent"

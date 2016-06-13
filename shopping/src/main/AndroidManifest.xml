@@ -24,10 +24,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.SearchArticleArtivity"
+            android:name=".activity.SearchArticleActivity"
             android:label="@string/title_activity_search_article_artivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.SecondTypeActivity"></activity>
+        <activity android:name=".activity.SecondTypeActivity" />
+        <activity
+            android:name=".activity.ArticleItemActivity"
+            android:label="@string/title_activity_article_item"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

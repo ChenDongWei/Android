@@ -53,7 +53,7 @@ public class ArticleTypeAdapter extends BaseAdapter {
         articleTypeName.setText(articleType.name);
 
         ImageView articleTypeLogo = (ImageView) item.findViewById(R.id.iv_typeLogo);
-        articleTypeLogo.setImageBitmap(WindowUtils.getScaleBitmap(articleType.typeLogo, context));
+        articleTypeLogo.setImageBitmap(WindowUtils.getScaleBitmap(articleType.typeLogo, context, 1/3f));
 
 
         return item;

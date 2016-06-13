@@ -39,7 +39,7 @@ public class WindowUtils {
 
     }
 
-    public static Bitmap getScaleBitmap(Bitmap bitmap,Context context){
+    public static Bitmap getScaleBitmap(Bitmap bitmap,Context context, float rate){
 
         float screenWidth = WindowUtils.getWindowsWidth(context);
         /** 2.得到一个缩放比例
@@ -47,8 +47,8 @@ public class WindowUtils {
          *          （6/3）/53  * 53  = 2
          *          （6/3）/60  * 60  = 2
          * */
-        float scaleX = (screenWidth / 3) / bitmap.getWidth();
-        float scaleY = (screenWidth / 3) / bitmap.getHeight();
+        float scaleX = (screenWidth * rate) / bitmap.getWidth();
+        float scaleY = (screenWidth * rate) / bitmap.getHeight();
         /** 3.定义一个缩放对象:矩形 */
         Matrix matrix = new Matrix();
         matrix.setScale(scaleX,scaleY);

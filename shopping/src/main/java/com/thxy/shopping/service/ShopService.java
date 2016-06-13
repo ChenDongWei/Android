@@ -47,7 +47,7 @@ public class ShopService {
 
     }
 
-    public static Object[] searchArticleByWord(String word, int pageIndex, String typeCode) {
+    public static Object[] searchArticlesByWord(String word, int pageIndex, String typeCode) {
 
         try {
             Object[] objs = new Object[2];
@@ -80,6 +80,7 @@ public class ShopService {
                     article.id = jsonObject1.getString("id");
                     article.title = jsonObject1.getString("title");
                     article.price = jsonObject1.getDouble("price");
+                    article.description = jsonObject1.getString("description");
                     /** 从服务端将图片下载到客户端 */
                     article.bitmap = HttpUtils.getBitmapByImage("images/article/" + jsonObject1.getString("image"));
                     articles.add(article);
@@ -128,4 +129,44 @@ public class ShopService {
     }
 
 
+    public static Object[] getShopCarArticle(String id_nums) {
+        try {
+            Object[] objs = new Object[2];
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("id_nums", id_nums);
+
+            /** 1.发起网络请求  */
+            String result = HttpUtils.sendPost("android/shopCarArticle.action", params);
+            JSONObject jsonObject = new JSONObject(result);
+            JSONArray jsonArray = jsonObject.getJSONArray("items");
+            /** 获取当前商品分页的总数  */
+            int totalSize = jsonObject.getInt("totalSize");
+            objs[0] = totalSize;
+
+            List<Article> articles = null;
+            if (jsonArray != null && jsonArray.length() > 0) {
+                articles = new ArrayList<>();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                    Article article = new Article();
+                    article.id = jsonObject1.getString("id");
+                    article.title = jsonObject1.getString("title");
+                    article.price = jsonObject1.getDouble("price");
+                    article.description = jsonObject1.getString("description");
+                    /** 从服务端将图片下载到客户端 */
+                    article.bitmap = HttpUtils.getBitmapByImage("images/article/" + jsonObject1.getString("image"));
+                    article.buyNum = jsonObject1.getInt("buyNum");
+                    articles.add(article);
+                }
+
+            }
+            objs[1] = articles;
+
+            return objs;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

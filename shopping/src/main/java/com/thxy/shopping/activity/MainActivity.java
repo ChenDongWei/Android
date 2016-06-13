@@ -1,18 +1,16 @@
 package com.thxy.shopping.activity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 
 import com.thxy.shopping.R;
 import com.thxy.shopping.fragment.CarFragment;
@@ -25,7 +23,9 @@ import java.util.List;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
-    /** 四个*/
+    /**
+     * 四个
+     */
     private int[] menusIds = new int[]{
             R.id.ll_main_home,
             R.id.ll_main_classification,
@@ -64,8 +64,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             R.drawable.guide_account_nm
     };
 
-    private ViewPager mainViewPager;
+    private RelativeLayout mainViewPager;
     private List<Fragment> fragments = new ArrayList<>();
+    private Fragment F_HOME, T_HOME, C_HOME, U_HOME;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,62 +78,109 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private void initView() {
         setContentView(R.layout.activity_main);
 
-        for (int i = 0; i < menusIds.length; i++){
+        for (int i = 0; i < menusIds.length; i++) {
             menus[i] = (LinearLayout) findViewById(menusIds[i]);
             menuImages[i] = (ImageView) findViewById(menuImageids[i]);
             menuTexts[i] = (TextView) findViewById(menuTextids[i]);
             menus[i].setOnClickListener(this);
         }
 
-        mainViewPager = (ViewPager) findViewById(R.id.mainViewPager);
+        mainViewPager = (RelativeLayout) findViewById(R.id.mainViewPager);
 
-        fragments.add(new HomeFragment());
-        fragments.add(new TypeFragment());
-        fragments.add(new CarFragment());
-        fragments.add(new UserFragment());
+        /** 默认展示第一个主页 */
+        if (F_HOME != null) {
+            showFragment(F_HOME);
+        } else {
+            F_HOME = new HomeFragment();
+            addFragment(F_HOME);
+            showFragment(F_HOME);
+        }
+    }
 
-        mainViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
-            @Override
-            public Fragment getItem(int position) {
-                return fragments.get(position);
-            }
+    private void addFragment(Fragment fragment) {
+        FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.mainViewPager, fragment);
+        ft.commit();
+    }
 
-            @Override
-            public int getCount() {
-                return fragments.size();
-            }
-        });
+    private void showFragment(Fragment fragment) {
+        FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
+
+        if (F_HOME != null) {
+            ft.hide(F_HOME);
+        }
+        if (T_HOME != null) {
+            ft.hide(T_HOME);
+        }
+        if (C_HOME != null) {
+            ft.hide(C_HOME);
+        }
+        if (U_HOME != null) {
+            ft.hide(U_HOME);
+        }
+        ft.show(fragment);
+        ft.commitAllowingStateLoss();
     }
 
     @Override
     public void onClick(View v) {
 
-        for (int i = 0; i<menusIds.length; i++){
+        for (int i = 0; i < menusIds.length; i++) {
             menuImages[i].setImageResource(menuCloseImages[i]);
             menuTexts[i].setTextColor(0xff000000);
         }
 
-        switch (v.getId()){
-            case R.id.ll_main_home :
+        switch (v.getId()) {
+            case R.id.ll_main_home:
                 menuImages[0].setImageResource(menuOpenImages[0]);
                 menuTexts[0].setTextColor(0xffff5000);
-                mainViewPager.setCurrentItem(0);
+                if (F_HOME != null) {
+                    showFragment(F_HOME);
+                } else {
+                    F_HOME = new HomeFragment();
+                    addFragment(F_HOME);
+                    showFragment(F_HOME);
+                }
                 break;
-            case R.id.ll_main_classification :
+            case R.id.ll_main_classification:
                 menuImages[1].setImageResource(menuOpenImages[1]);
                 menuTexts[1].setTextColor(0xffff5000);
-                mainViewPager.setCurrentItem(1);
+                if (T_HOME != null) {
+                    showFragment(T_HOME);
+                } else {
+                    T_HOME = new TypeFragment();
+                    addFragment(T_HOME);
+                    showFragment(T_HOME);
+                }
                 break;
-            case R.id.ll_main_car :
+            case R.id.ll_main_car:
                 menuImages[2].setImageResource(menuOpenImages[2]);
                 menuTexts[2].setTextColor(0xffff5000);
-                mainViewPager.setCurrentItem(2);
+
+                    removeFragment(C_HOME);
+                    C_HOME = new CarFragment();
+                    addFragment(C_HOME);
+                    showFragment(C_HOME);
+                
                 break;
-            case R.id.ll_main_user :
+            case R.id.ll_main_user:
                 menuImages[3].setImageResource(menuOpenImages[3]);
                 menuTexts[3].setTextColor(0xffff5000);
-                mainViewPager.setCurrentItem(3);
+                if (U_HOME != null) {
+                    showFragment(U_HOME);
+                } else {
+                    U_HOME = new UserFragment();
+                    addFragment(U_HOME);
+                    showFragment(U_HOME);
+                }
                 break;
+        }
+    }
+
+    private void removeFragment(Fragment fragment) {
+        if (fragment != null){
+            FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
+            ft.remove(fragment);
         }
     }
 

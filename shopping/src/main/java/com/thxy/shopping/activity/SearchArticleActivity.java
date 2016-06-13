@@ -1,6 +1,7 @@
 package com.thxy.shopping.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -8,6 +9,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -21,7 +23,7 @@ import com.thxy.shopping.service.ShopService;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchArticleArtivity extends Activity {
+public class SearchArticleActivity extends Activity {
 
     private EditText word;
     /** 定义线性容器对象 */
@@ -35,7 +37,7 @@ public class SearchArticleArtivity extends Activity {
 
     private int firstVisibleItem1,visibleItemCount1,totalItemCount1;
 
-    SearchArticleAdapter searchArticleAdapter;
+    private SearchArticleAdapter searchArticleAdapter;
 
     private ImageView backBtn;
 
@@ -63,12 +65,22 @@ public class SearchArticleArtivity extends Activity {
 
         //searchArticle.setSelection((pageIndex - 1) * 6);
 
+        searchArticle.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Article article = articles.get(position);
+                Intent intent = new Intent(SearchArticleActivity.this, ArticleItemActivity.class);
+                intent.putExtra("article", article);
+                intent.putExtra("image", article.bitmap);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_article_acticle);
+        setContentView(R.layout.activity_search_article);
 
         word = (EditText) findViewById(R.id.et_word);
         searchArticle = (ListView) findViewById(R.id.lv_searchArticle);
@@ -77,7 +89,7 @@ public class SearchArticleArtivity extends Activity {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SearchArticleArtivity.this.finish();
+                SearchArticleActivity.this.finish();
             }
         });
 
@@ -109,7 +121,7 @@ public class SearchArticleArtivity extends Activity {
                     if((firstVisibleItem1 + visibleItemCount1) == totalItemCount1){
                         /** 加载下一页 */
                         if (pageIndex >= totalSize){
-                            Toast.makeText(SearchArticleArtivity.this, "没有更多数据了", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchArticleActivity.this, "没有更多数据了", Toast.LENGTH_SHORT).show();
                         }else {
                             pageIndex++;
                             initSearchView(0x111);
@@ -138,7 +150,7 @@ public class SearchArticleArtivity extends Activity {
                     articles.clear();
                 }
 
-                Object[] objs = ShopService.searchArticleByWord(word.getText().toString(), pageIndex, null);
+                Object[] objs = ShopService.searchArticlesByWord(word.getText().toString(), pageIndex, null);
                 totalSize = (int) objs[0];
 
                 List<Article> searchArticles = (List<Article>) objs[1];

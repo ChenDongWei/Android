@@ -8,4 +8,7 @@
     <color name="red">#ff00</color>
     <color name="white">#ffff</color>
     <color name="gray">#fccc</color>
+    <color name="grey">#3f000000</color>
+    <color name="littleGray">#fddd</color>
+    <color name="bigGray">#f888</color>
 </resources>

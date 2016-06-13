@@ -47,7 +47,7 @@ public class HotArticleAdapter extends BaseAdapter {
         View hotViewItem = LayoutInflater.from(context).inflate(R.layout.layout_hot_article_gv_item, null);
 
         ImageView imageView = (ImageView) hotViewItem.findViewById(R.id.iv_hotLogo);
-        imageView.setImageBitmap(WindowUtils.getScaleBitmap(article.bitmap, context));
+        imageView.setImageBitmap(WindowUtils.getScaleBitmap(article.bitmap, context, 1/3f));
 
         TextView title = (TextView) hotViewItem.findViewById(R.id.tv_hotTitle);
         title.setText(article.title);

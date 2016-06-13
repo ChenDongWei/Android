@@ -48,7 +48,7 @@ public class SearchArticleAdapter extends BaseAdapter {
         View item = LayoutInflater.from(context).inflate(R.layout.layout_search_article_lv_item, null);
 
         ImageView logo = (ImageView) item.findViewById(R.id.iv_articleLogo);
-        logo.setImageBitmap(WindowUtils.getScaleBitmap(article.bitmap, context));
+        logo.setImageBitmap(WindowUtils.getScaleBitmap(article.bitmap, context, 1/3f));
 
         TextView title = (TextView) item.findViewById(R.id.tv_articleTitle);
         title.setText(article.title);

@@ -10,13 +10,15 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thxy.shopping.R;
-import com.thxy.shopping.activity.SearchArticleArtivity;
+import com.thxy.shopping.activity.ArticleItemActivity;
+import com.thxy.shopping.activity.SearchArticleActivity;
 import com.thxy.shopping.adapter.AdvertiseAdapter;
 import com.thxy.shopping.adapter.HotArticleAdapter;
 import com.thxy.shopping.dto.Article;
@@ -91,6 +93,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         HotArticleAdapter hotArticleAdapter = new HotArticleAdapter(articles, getActivity());
         hotArticlesGV.setAdapter(hotArticleAdapter);
 
+        hotArticlesGV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Article article = articles.get(position);
+                Intent intent = new Intent(HomeFragment.this.getActivity(), ArticleItemActivity.class);
+                intent.putExtra("article", article);
+                intent.putExtra("image", article.bitmap);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -199,7 +211,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.tv_searchMenu) {
-            Intent intent = new Intent(getActivity(), SearchArticleArtivity.class);
+            Intent intent = new Intent(getActivity(), SearchArticleActivity.class);
             startActivity(intent);
         }
     }
