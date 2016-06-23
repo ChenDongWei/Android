@@ -11,11 +11,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
+import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +55,7 @@ public class SplashActivity extends Activity {
     private UrlBean parseJson;//url信息封装bean
     private TextView tv_versionName;//显示版本名的组件
     private long startTimeMillis;//记录开始反问网络的时间
+    private ProgressBar pb_download;//下载新版本的进度条
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,15 +134,28 @@ public class SplashActivity extends Activity {
                     errorCode = 4003;
                     e.printStackTrace();
                 } finally {
-                    if (errorCode == -1) {
-                        //判断是否有新版本
-                        isNewVersion(parseJson);
+//                    if (errorCode == -1) {
+//                        //判断是否有新版本
+//                        isNewVersion(parseJson);
+//                    } else {
+//                        Message msg = Message.obtain();
+//                        msg.what = ERROR;
+//                        msg.arg1 = errorCode;
+//                        handler.sendMessage(msg);
+//                    }
+                    Message msg = Message.obtain();
+                    if (errorCode == -1){
+                        msg.what = isNewVersion(parseJson);
                     } else {
-                        Message msg = Message.obtain();
                         msg.what = ERROR;
                         msg.arg1 = errorCode;
-                        handler.sendMessage(msg);
                     }
+                    long endTimeMillis = System.currentTimeMillis();
+                    if (endTimeMillis - startTimeMillis < 3000) {
+                        //设置休眠时间，保证至少休眠3秒
+                        SystemClock.sleep(3000 - (endTimeMillis - startTimeMillis));
+                    }
+                    handler.sendMessage(msg);
 
                     try {
                         if (bfr == null || conn == null) {
@@ -241,12 +257,23 @@ public class SplashActivity extends Activity {
         file.delete();
         utils.download(parseJson.getUrl(), "/mnt/sdcard/xx.apk", new RequestCallBack<File>() {
             @Override
+            public void onLoading(long total, long current, boolean isUploading) {
+                pb_download.setVisibility(View.VISIBLE);
+                //设置进度条最大值
+                pb_download.setMax((int) total);
+                //设置当前进度值
+                pb_download.setProgress((int) current);
+                super.onLoading(total, current, isUploading);
+            }
+
+            @Override
             public void onSuccess(ResponseInfo<File> responseInfo) {
                 //下载成功
                 Toast.makeText(getApplicationContext(), "下载新版本成功!", Toast.LENGTH_SHORT)
                         .show();
                 //安装apk
                 installApk();
+                pb_download.setVisibility(View.GONE);
             }
 
             @Override
@@ -275,27 +302,20 @@ public class SplashActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    protected void isNewVersion(UrlBean parseJson) {
+    protected int isNewVersion(UrlBean parseJson) {
         //获取服务器的版本
         int serverCode = parseJson.getVersionCode();
-        long endTimeMillis = System.currentTimeMillis();
-        if (endTimeMillis - startTimeMillis < 3000) {
-            //设置休眠时间，保证至少休眠3秒
-            SystemClock.sleep(3000 - (endTimeMillis - startTimeMillis));
-        }
+
         //对比自己的版本
         if (serverCode == versionCode) {
-            //执行结束的时间
+            return LOADMAIN;
 
             //进入主界面
-            Message msg = Message.obtain();
-            msg.what = LOADMAIN;
-            handler.sendMessage(msg);
+//            Message msg = Message.obtain();
+//            msg.what = LOADMAIN;
+//            handler.sendMessage(msg);
         } else {
-            //弹出对话框提示更新
-            Message msg = Message.obtain();
-            msg.what = SHOWUPDATEDIALOG;
-            handler.sendMessage(msg);
+            return SHOWUPDATEDIALOG;
         }
     }
 
@@ -322,6 +342,7 @@ public class SplashActivity extends Activity {
         setContentView(R.layout.activity_splash);
         rl_root = (RelativeLayout) findViewById(R.id.rl_splash_root);
         tv_versionName = (TextView) findViewById(R.id.tv_splash_version_name);
+        pb_download = (ProgressBar) findViewById(R.id.pb_splash_download_progress);
     }
 
     private void initAnimation() {

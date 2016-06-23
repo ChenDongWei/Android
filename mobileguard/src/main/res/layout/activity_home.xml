@@ -4,11 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.thxy.mobileguard.activities.HomeActivity">
 
     <TextView
-        android:layout_width="wrap_content"
+        style="@style/tv_title"
+        android:text="手机安全卫士"/>
+
+    <com.thxy.mobileguard.view.MyTextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="home"/>
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:text="最好用的手机卫士，为您的手机保驾护航，免费使用，如有疑问，请联系作者。。。"/>
+
+    <GridView
+        android:id="@+id/gv_home_menus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="3"
+        android:verticalSpacing="5dp"></GridView>
 
 </LinearLayout>
