@@ -2,6 +2,7 @@ package com.thxy.mobileguard.activities;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thxy.mobileguard.R;
+import com.thxy.mobileguard.utils.Md5Utils;
 import com.thxy.mobileguard.utils.MyConstants;
 import com.thxy.mobileguard.utils.SpTools;
 
@@ -73,12 +75,67 @@ public class HomeActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        //自定义对话框
-                        showSettingPassDialog();
+                        //自定义输入密码对话框
+                        if (TextUtils.isEmpty(SpTools.getString(getApplicationContext(),
+                                MyConstants.PASSWORD, ""))) {
+                            showSettingPassDialog();
+                        } else {
+                            //输入密码对话框
+                            showEnterPassDialog();
+                        }
+
                         break;
                 }
             }
         });
+    }
+
+    private void showEnterPassDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = View.inflate(getApplicationContext(), R.layout.dialog_enter_password, null);
+        final EditText et_passone = (EditText) view.findViewById(R.id
+                .et_dialog_enter_password_passone);
+        Button bt_setpass = (Button) view.findViewById(R.id.bt_dialog_enter_password_login);
+        Button bt_cancel = (Button) view.findViewById(R.id.bt_dialog_enter_password_cancel);
+
+        builder.setView(view);
+
+        bt_setpass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String passone = et_passone.getText().toString().trim();
+                if (TextUtils.isEmpty(passone)) {
+                    Toast.makeText(getApplicationContext(), "密码不能为空!", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    //密码判断,MD5二次加密
+                    passone = Md5Utils.md5(Md5Utils.md5(passone));
+
+                    if (passone.equals(SpTools.getString(getApplicationContext(), MyConstants
+                            .PASSWORD, ""))) {
+                        //进入手机防盗界面
+                        Intent intent = new Intent(HomeActivity.this, LostFindActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "密码不正确！", Toast.LENGTH_SHORT)
+                                .show();
+                        return;
+                    }
+                    //关闭对话框
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        bt_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog = builder.create();
+        dialog.show();
     }
 
     private void showSettingPassDialog() {
@@ -98,14 +155,16 @@ public class HomeActivity extends Activity {
             public void onClick(View v) {
                 String passone = et_passone.getText().toString().trim();
                 String passtwo = et_passtwo.getText().toString().trim();
-                if (TextUtils.isEmpty(passone) || TextUtils.isEmpty(passtwo)){
-                    Toast.makeText(getApplicationContext(), "密码不能为空!", Toast.LENGTH_SHORT).show();;
+                if (TextUtils.isEmpty(passone) || TextUtils.isEmpty(passtwo)) {
+                    Toast.makeText(getApplicationContext(), "密码不能为空!", Toast.LENGTH_SHORT).show();
+                    ;
                     return;
-                }else if (!passone.equals(passtwo)){
-                    Toast.makeText(getApplicationContext(), "密码不一致", Toast.LENGTH_SHORT).show();;
+                } else if (!passone.equals(passtwo)) {
+                    Toast.makeText(getApplicationContext(), "密码不一致", Toast.LENGTH_SHORT).show();
                     return;
-                }else {
-                    //保存密码
+                } else {
+                    //保存密码,MD5二次加密
+                    passone = Md5Utils.md5(Md5Utils.md5(passone));
                     SpTools.putString(getApplicationContext(), MyConstants.PASSWORD, passone);
                     dialog.dismiss();
                 }
