@@ -30,7 +30,15 @@ public class LostFindService extends Service {
 
             for (Object data : datas) {
                 SmsMessage sm = SmsMessage.createFromPdu((byte[]) data);
-
+                //获取短信内容
+                String mess = sm.getMessageBody();
+                if (mess.equals("#*gps*#")){
+                    //获取定位信息
+                    Intent service = new Intent(context, LocationService.class);
+                    startService(service);
+                    //终止广播
+                    abortBroadcast();
+                }
             }
         }
     }

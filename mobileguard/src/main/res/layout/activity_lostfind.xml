@@ -33,8 +33,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
         android:layout_marginBottom="10dp"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:onClick="enterSetup"
         android:text="是否重新进入设置向导界面"
         android:textSize="22sp"/>
 
