@@ -7,6 +7,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.thxy.mobileguard.R;
+import com.thxy.mobileguard.utils.EncryptTools;
 import com.thxy.mobileguard.utils.MyConstants;
 import com.thxy.mobileguard.utils.SpTools;
 
@@ -19,7 +20,8 @@ public class Setup3Activity extends BaseSetupActivity {
 
     @Override
     public void initData() {
-        et_safeNumber.setText(SpTools.getString(getApplicationContext(), MyConstants.SAFENUMBER, ""));
+        String safenumber = SpTools.getString(getApplicationContext(), MyConstants.SAFENUMBER, "");
+        et_safeNumber.setText(EncryptTools.decryption(MyConstants.MUSIC, safenumber));
         super.initData();
     }
 
@@ -56,6 +58,10 @@ public class Setup3Activity extends BaseSetupActivity {
             Toast.makeText(getApplicationContext(), "安全号码不能为空", Toast.LENGTH_SHORT).show();
             return;
         } else {
+            //对安全号码加密
+            safeNumber = EncryptTools.encrypt(MyConstants.MUSIC, safeNumber);
+
+            //保存安全号码
             SpTools.putString(getApplicationContext(), MyConstants.SAFENUMBER, safeNumber);
         }
         super.next(v);

@@ -13,6 +13,7 @@ import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.SmsManager;
 
+import com.thxy.mobileguard.utils.EncryptTools;
 import com.thxy.mobileguard.utils.MyConstants;
 import com.thxy.mobileguard.utils.SpTools;
 
@@ -72,7 +73,9 @@ public class LocationService extends Service {
                 tv_mess.append("speed:" + speed + "\n");
                 // 发送短信
 
-                String safeNumber = SpTools.getString(LocationService.this, MyConstants.SAFENUMBER, "");
+                String safeNumber = SpTools.getString(LocationService.this, MyConstants
+                        .SAFENUMBER, "");
+                safeNumber = EncryptTools.decryption(MyConstants.MUSIC, safeNumber);
                 //发送短信给安全号码
                 SmsManager sm = SmsManager.getDefault();
                 sm.sendTextMessage(safeNumber, "", tv_mess + "", null, null);
@@ -82,21 +85,9 @@ public class LocationService extends Service {
             }
         };
         //注册监听回调
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
         //获取所有提供的定位方式
         List<String> allProviders = lm.getAllProviders();
-        for (String string : allProviders){
+        for (String string : allProviders) {
             System.out.println(string + ">>定位方式");
         }
         //动态获取手机的最佳定位方式
@@ -111,18 +102,6 @@ public class LocationService extends Service {
     @Override
     public void onDestroy() {
         //取消定位的监听
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
         lm.removeUpdates(listener);
         lm = null;
         super.onDestroy();

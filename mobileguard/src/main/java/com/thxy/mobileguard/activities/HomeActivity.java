@@ -74,7 +74,13 @@ public class HomeActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
+                    case 8:
+                        //设置中心
+                        Intent setting = new Intent(HomeActivity.this, SettingCenterActivity.class);
+                        startActivity(setting);
+                        break;
                     case 0:
+                        //手机防盗
                         //自定义输入密码对话框
                         if (TextUtils.isEmpty(SpTools.getString(getApplicationContext(),
                                 MyConstants.PASSWORD, ""))) {
@@ -84,6 +90,8 @@ public class HomeActivity extends Activity {
                             showEnterPassDialog();
                         }
 
+                        break;
+                    default:
                         break;
                 }
             }
@@ -157,7 +165,6 @@ public class HomeActivity extends Activity {
                 String passtwo = et_passtwo.getText().toString().trim();
                 if (TextUtils.isEmpty(passone) || TextUtils.isEmpty(passtwo)) {
                     Toast.makeText(getApplicationContext(), "密码不能为空!", Toast.LENGTH_SHORT).show();
-                    ;
                     return;
                 } else if (!passone.equals(passtwo)) {
                     Toast.makeText(getApplicationContext(), "密码不一致", Toast.LENGTH_SHORT).show();
@@ -190,6 +197,13 @@ public class HomeActivity extends Activity {
         gv_menus.setAdapter(adapter);
     }
 
+    @Override
+    protected void onResume() {
+        //通知GridView更新数据
+        adapter.notifyDataSetChanged();
+        super.onResume();
+    }
+
     private class MyAdapter extends BaseAdapter {
 
         @Override
@@ -214,6 +228,15 @@ public class HomeActivity extends Activity {
             TextView tv_name = (TextView) view.findViewById(R.id.iv_item_home_gv_name);
             iv_icon.setImageResource(icons[position]);
             tv_name.setText(names[position]);
+            if (position == 0) {
+                //判断是否存在新的手机防盗名
+                if (!TextUtils.isEmpty(SpTools.getString(getApplicationContext(), MyConstants
+                        .LOSTFINDNAME, ""))) {
+                    tv_name.setText(SpTools.getString(getApplicationContext(), MyConstants
+                            .LOSTFINDNAME, ""));
+                }
+            }
+
             return view;
         }
     }
