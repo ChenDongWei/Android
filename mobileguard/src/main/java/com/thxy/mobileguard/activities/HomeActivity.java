@@ -75,8 +75,16 @@ public class HomeActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 8:
+                    {
                         //设置中心
                         Intent setting = new Intent(HomeActivity.this, SettingCenterActivity.class);
+                        startActivity(setting);
+                        break;
+                    }
+
+                    case 1:
+                        //通讯卫士
+                        Intent setting = new Intent(HomeActivity.this, TelSmsSafeActivity.class);
                         startActivity(setting);
                         break;
                     case 0:

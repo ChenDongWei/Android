@@ -12,4 +12,5 @@ public interface MyConstants {
     int MUSIC = 120;//安全号码的加密种子(为迷惑而取名为MUSIC)
     String LOSTFIND = "lostfind";//开机是否开启手机防盗
     String LOSTFINDNAME = "lostfindname";//手机防盗名
+    String AUTOUPDATE = "autoupdate";//自动更新设置
 }

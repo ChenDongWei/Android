@@ -28,6 +28,8 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.thxy.mobileguard.R;
 import com.thxy.mobileguard.domain.UrlBean;
+import com.thxy.mobileguard.utils.MyConstants;
+import com.thxy.mobileguard.utils.SpTools;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,8 +68,14 @@ public class SplashActivity extends Activity {
         initData();
         //初始化动画
         initAnimation();
-        //检测服务器版本
-        checkVersion();
+        //timeInitialization()方法如下：
+    }
+
+    private void timeInitialization(){
+        if (SpTools.getBoolean(getApplicationContext(), MyConstants.AUTOUPDATE, false)) {
+            //检测服务器版本
+            checkVersion();
+        }
     }
 
     private void initData() {
@@ -144,7 +152,7 @@ public class SplashActivity extends Activity {
 //                        handler.sendMessage(msg);
 //                    }
                     Message msg = Message.obtain();
-                    if (errorCode == -1){
+                    if (errorCode == -1) {
                         msg.what = isNewVersion(parseJson);
                     } else {
                         msg.what = ERROR;
@@ -368,6 +376,34 @@ public class SplashActivity extends Activity {
         as.addAnimation(ra);
         as.addAnimation(sa);
 
+        //设置动画完成的事件监听
+        as.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                //耗时功能统一处理封装
+                timeInitialization();
+            }
+
+            /**
+             * 动画结束的事件处理
+             * @param animation
+             */
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                //判断是否进行服务器版本的检测
+                if (!SpTools.getBoolean(getApplicationContext(), MyConstants.AUTOUPDATE, false)) {
+                    //不做版本更新，直接进入主界面
+                    loadMain();
+                }else {
+                    //界面衔接由自动更新完成，这里不作处理
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
         //显示动画
         rl_root.startAnimation(as);
     }

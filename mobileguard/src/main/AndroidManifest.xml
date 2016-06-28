@@ -99,6 +99,11 @@
             >
         </receiver>
 
+        <activity
+            android:name=".activities.TelSmsSafeActivity"
+            android:label="@string/title_activity_tel_sms_safe"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

@@ -12,4 +12,5 @@
     <string name="sample_device_admin">管理员</string>
     <string name="sample_device_admin_description">开启设备管理员</string>
     <string name="title_activity_setting_center">SettingCenterActivity</string>
+    <string name="title_activity_tel_sms_safe">TelSmsSafeActivity</string>
 </resources>

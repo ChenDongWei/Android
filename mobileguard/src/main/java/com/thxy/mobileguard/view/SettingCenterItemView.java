@@ -39,6 +39,33 @@ public class SettingCenterItemView extends LinearLayout {
                 ".mobileguard", "mcontent");
         tv_title.setText(title);
         contents = content.split("-");
+
+        tv_content.setTextColor(Color.RED);
+        tv_content.setText(contents[0]);
+    }
+
+    /**
+     * item根布局设置点击事件
+     * @param listener
+     */
+    public void setItemClickListener(OnClickListener listener){
+        item.setOnClickListener(listener);
+    }
+
+    /**
+     * 设置item里的checkbox的状态
+     * @param isChecked
+     */
+    public void setChecked(boolean isChecked){
+        cb_check.setChecked(isChecked);
+    }
+
+    /**
+     * @return
+     *      item里的checkbox的状态
+     */
+    public boolean isChecked(){
+        return cb_check.isChecked();
     }
 
     private void initEvent() {
@@ -72,7 +99,13 @@ public class SettingCenterItemView extends LinearLayout {
         tv_title = (TextView) item.findViewById(R.id.tv_settingcenter_autoupdate_title);
         tv_content = (TextView) item.findViewById(R.id.tv_settingcenter_autoupdate_content);
         cb_check = (CheckBox) item.findViewById(R.id.cb_settingcenter_autoupdate_checked);
+        //设置中心item
         addView(item);
+
+        View blackitem = View.inflate(getContext(), R.layout.item_telsmssafe_listview, null);
+        //黑名单item
+        addView(blackitem);
+
     }
 
     /**
