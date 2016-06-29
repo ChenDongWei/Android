@@ -69,6 +69,30 @@ public class BlackDao {
     }
 
     /**
+     * @param datasNumber 分批加载的数据条目数
+     * @param startIndex  取数据的初始位置
+     * @return 分批加载数据
+     */
+    public List<BlackBean> getMoreDatas(int datasNumber, int startIndex) {
+        List<BlackBean> datas = new ArrayList<BlackBean>();
+        SQLiteDatabase database = blackDB.getReadableDatabase();
+        Cursor cursor = database.rawQuery("select " + BlackTable.PHONE + ","
+                + BlackTable.MODE + " from " + BlackTable.BLACKTABLE
+                + " order by _id desc limit ?,? ", new String[]{startIndex + "", datasNumber + ""});
+
+        while (cursor.moveToNext()) {
+            BlackBean bean = new BlackBean();
+            bean.setPhone(cursor.getString(0));
+            bean.setMode(cursor.getInt(1));
+            datas.add(bean);
+        }
+
+        cursor.close();
+        database.close();
+        return datas;
+    }
+
+    /**
      * 添加黑名单号码
      *
      * @param bean
@@ -84,6 +108,7 @@ public class BlackDao {
      * @param mode  拦截模式
      */
     public void add(String phone, int mode) {
+        delete(phone);
         //获取黑名单数据库
         SQLiteDatabase db = blackDB.getWritableDatabase();
         ContentValues values = new ContentValues();
