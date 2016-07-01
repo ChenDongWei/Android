@@ -85,7 +85,7 @@ public class LostFindService extends Service {
     public void onCreate() {
         //注册短信的监听广播
         receiver = new SmsReceiver();
-        IntentFilter filter = new IntentFilter("android.provider.Telephone.SMS_RECEIVED");
+        IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
         filter.setPriority(Integer.MAX_VALUE);
         //注册短信监听
         registerReceiver(receiver, filter);

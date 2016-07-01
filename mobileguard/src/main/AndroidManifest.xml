@@ -14,6 +14,9 @@
     <uses-permission android:name="android.permission.SEND_SMS"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.READ_CALL_LOG"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:allowBackup="true"
@@ -67,6 +70,29 @@
             android:name=".activities.SettingCenterActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".activities.TelSmsSafeActivity"
+            android:label="@string/title_activity_tel_sms_safe"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".activities.CalllogsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".activities.SmslogsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".activities.AToolActivity"
+            android:label="@string/title_activity_atool"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".activities.PhoneLocationActivity"
+            android:label="@string/title_activity_phone_location"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
 
         <service
             android:name=".service.LostFindService"
@@ -75,6 +101,11 @@
         </service>
         <service
             android:name=".service.LocationService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
+        <service
+            android:name=".service.TelSmsBlackService"
             android:enabled="true"
             android:exported="true">
         </service>
@@ -96,14 +127,8 @@
             <intent-filter>
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
             </intent-filter>
-            >
         </receiver>
 
-        <activity
-            android:name=".activities.TelSmsSafeActivity"
-            android:label="@string/title_activity_tel_sms_safe"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
     </application>
 
 </manifest>

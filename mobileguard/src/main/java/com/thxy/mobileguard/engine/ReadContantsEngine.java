@@ -14,6 +14,57 @@ import java.util.List;
  * Created by dongwei on 2016/6/24.
  */
 public class ReadContantsEngine {
+
+    public static List<ContantBean> readSmslog(Context context) {
+        //通过内容提供者访问电话日志数据库
+        Uri uri = Uri.parse("content://sms");
+        //获取电话记录的联系人游标
+        Cursor cursor = context.getContentResolver().query(uri, new String[]{"address", "person"},
+                null, null, " _id desc");
+        List<ContantBean> datas = new ArrayList<ContantBean>();
+        while (cursor.moveToNext()) {
+            ContantBean bean = new ContantBean();
+
+            String phone = cursor.getString(0);
+            String name = cursor.getString(1);
+            bean.setName(name);
+            bean.setPhone(phone);
+
+            datas.add(bean);
+        }
+        return datas;
+    }
+
+    /**
+     * @param context
+     * @return 电话日志记录
+     */
+    public static List<ContantBean> readCalllog(Context context) {
+        //通过内容提供者访问电话日志数据库
+        Uri uri = Uri.parse("content://call_log/calls");
+        //获取电话记录的联系人游标
+        Cursor cursor = context.getContentResolver().query(uri, new String[]{"number", "name"},
+                null, null, " _id desc");
+        List<ContantBean> datas = new ArrayList<ContantBean>();
+        while (cursor.moveToNext()) {
+            ContantBean bean = new ContantBean();
+
+            String phone = cursor.getString(0);
+            String name = cursor.getString(1);
+            bean.setName(name);
+            bean.setPhone(phone);
+
+            datas.add(bean);
+        }
+        return datas;
+    }
+
+    /**
+     * 读取手机联系人
+     *
+     * @param context
+     * @return
+     */
     public static List<ContantBean> readContants(Context context) {
         List<ContantBean> datas = new ArrayList<ContantBean>();
         Uri uriContants = Uri.parse("content://com.android.contacts/contacts");

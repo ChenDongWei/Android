@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.thxy.mobileguard.activities.PhoneLocationActivity">
+
+    <TextView
+        style="@style/tv_title"
+        android:text="手机归属地查询"/>
+
+    <EditText
+        android:id="@+id/et_phonelocation_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="输入手机号码"
+        android:inputType="phone"
+        android:textColor="@color/black"/>
+
+    <Button
+        android:id="@+id/bt_phonelocation_query"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="查询"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/tv_phonelocation_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="归属地："
+        android:textColor="@color/black"
+        android:textSize="22sp"/>
+</LinearLayout>

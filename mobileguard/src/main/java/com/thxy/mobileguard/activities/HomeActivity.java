@@ -81,6 +81,11 @@ public class HomeActivity extends Activity {
                         startActivity(setting);
                         break;
                     }
+                    case 7:
+                        //高级工具
+                        Intent atool = new Intent(HomeActivity.this, AToolActivity.class);
+                        startActivity(atool);
+                        break;
 
                     case 1:
                         //通讯卫士

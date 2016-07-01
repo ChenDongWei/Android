@@ -24,6 +24,24 @@ public class BlackDao {
     }
 
     /**
+     * @param phone 电话号码
+     * @return 拦截模式
+     * 1.短信    2.电话    3.全部    0.不拦截
+     */
+    public int getMode(String phone) {
+        SQLiteDatabase database = blackDB.getReadableDatabase();
+        Cursor cursor = database.rawQuery("select" + BlackTable.MODE + "from" + BlackTable
+                .BLACKTABLE + "where" + BlackTable.PHONE + "=?", new String[]{phone});
+        int mode = 0;
+        if (cursor.moveToNext()){
+            mode = cursor.getInt(0);
+        }else {
+            mode = 0;
+        }
+        return mode;
+    }
+
+    /**
      * @return 所有的黑名单数据
      */
     public List<BlackBean> getAllDatas() {

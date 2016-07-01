@@ -1,6 +1,7 @@
 package com.thxy.mobileguard.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -30,14 +31,15 @@ import com.thxy.mobileguard.R;
 import com.thxy.mobileguard.dao.BlackDao;
 import com.thxy.mobileguard.domain.BlackBean;
 import com.thxy.mobileguard.domain.BlackTable;
+import com.thxy.mobileguard.utils.MyConstants;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TelSmsSafeActivity extends AppCompatActivity {
-    private static final int LOADING = 1;
-    private static final int FINISH = 2;
-    private ListView lv_safenumber;
+    protected static final int LOADING = 1;
+    protected static final int FINISH = 2;
+    private ListView lv_safenumbers;
     private Button bt_addSafeNumber;
     private TextView tv_nodata;
     private ProgressBar pb_loading;
@@ -45,11 +47,11 @@ public class TelSmsSafeActivity extends AppCompatActivity {
     private MyAdapter adapter;
     private List<BlackBean> moreDatas;
     private AlertDialog dialog;
-    private View contextView;
+    private View contentView;
     private PopupWindow pw;
     private ScaleAnimation sa;
 
-    private final int MOREDATASCOUNTS = 20;//分批加载的数据的个数
+    private final int MOREDATASCOUNTS = 7;//分批加载的数据的个数
 
     private List<BlackBean> datas = new ArrayList<BlackBean>();
 
@@ -74,7 +76,7 @@ public class TelSmsSafeActivity extends AppCompatActivity {
             //获取添加按钮的坐标
             bt_addSafeNumber.getLocationInWindow(location);
             //显示动画
-            contextView.startAnimation(sa);
+            contentView.startAnimation(sa);
             //设置右上角对齐
             pw.showAtLocation(bt_addSafeNumber, Gravity.RIGHT | Gravity.TOP, location[0] -
                     (getWindowManager().getDefaultDisplay().getWidth() - bt_addSafeNumber
@@ -90,12 +92,12 @@ public class TelSmsSafeActivity extends AppCompatActivity {
     }
 
     private void initPopupWindow() {
-        contextView = View.inflate(getApplicationContext(), R.layout.popup_blacknumber_item,
+        contentView = View.inflate(getApplicationContext(), R.layout.popup_blacknumber_item,
                 null);
-        TextView tv_manual = (TextView) contextView.findViewById(R.id.tv_popup_black_manual);
-        TextView tv_contact = (TextView) contextView.findViewById(R.id.tv_popup_black_contacts);
-        TextView tv_phonelog = (TextView) contextView.findViewById(R.id.tv_popup_black_phonelog);
-        TextView tv_smslog = (TextView) contextView.findViewById(R.id.tv_popup_black_smslog);
+        TextView tv_manual = (TextView) contentView.findViewById(R.id.tv_popup_black_manual);
+        TextView tv_contact = (TextView) contentView.findViewById(R.id.tv_popup_black_contacts);
+        TextView tv_phonelog = (TextView) contentView.findViewById(R.id.tv_popup_black_phonelog);
+        TextView tv_smslog = (TextView) contentView.findViewById(R.id.tv_popup_black_smslog);
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
@@ -103,15 +105,24 @@ public class TelSmsSafeActivity extends AppCompatActivity {
                 switch (v.getId()) {
                     case R.id.tv_popup_black_manual:
                         //手动导入
+                        showInputBlacknumberDialog("");
                         break;
                     case R.id.tv_popup_black_contacts:
                         //联系人导入
+                        Intent contacts = new Intent(TelSmsSafeActivity.this, FriendsActivity
+                                .class);
+                        startActivityForResult(contacts, 1);
                         break;
                     case R.id.tv_popup_black_phonelog:
                         //通话记录导入
+                        Intent phonelog = new Intent(TelSmsSafeActivity.this, CalllogsActivity
+                                .class);
+                        startActivityForResult(phonelog, 1);
                         break;
                     case R.id.tv_popup_black_smslog:
                         //短信记录导入
+                        Intent smslog = new Intent(TelSmsSafeActivity.this, SmslogsActivity.class);
+                        startActivityForResult(smslog, 1);
                         break;
                     default:
                         break;
@@ -125,24 +136,37 @@ public class TelSmsSafeActivity extends AppCompatActivity {
         tv_phonelog.setOnClickListener(listener);
         tv_smslog.setOnClickListener(listener);
 
-        pw = new PopupWindow(contextView, -2, -2);
+        pw = new PopupWindow(contentView, -2, -2);
         pw.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         //窗体动画的显示
         sa = new ScaleAnimation(1, 1, 0, 1, Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, 0f);
-        sa.setDuration(1000);
+        sa.setDuration(300);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //获取联系人，电话记录，短信记录的电话号码
+        if (data != null) {
+            String phone = data.getStringExtra(MyConstants.SAFENUMBER);
+            //显示输入黑名单的对话框
+            showInputBlacknumberDialog(phone);
+        } else {
+            //用户点击了返回键
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void initEvent() {
         //给listView设置滑动事件
-        lv_safenumber.setOnScrollListener(new AbsListView.OnScrollListener() {
+        lv_safenumbers.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 //监听静止状态
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
                     //获取最后显示的数据位置
-                    int lastVisiblePosition = lv_safenumber.getLastVisiblePosition();
+                    int lastVisiblePosition = lv_safenumbers.getLastVisiblePosition();
                     if (lastVisiblePosition == datas.size() - 1) {
                         initData();
                     }
@@ -164,14 +188,14 @@ public class TelSmsSafeActivity extends AppCompatActivity {
                 case LOADING:
                     //显示加载数据的进度，隐藏listview和没有数据
                     pb_loading.setVisibility(View.VISIBLE);
-                    lv_safenumber.setVisibility(View.GONE);
+                    lv_safenumbers.setVisibility(View.GONE);
                     tv_nodata.setVisibility(View.GONE);
                     break;
 
                 case FINISH:
                     //判断是否有数据
                     if (moreDatas.size() != 0) {
-                        lv_safenumber.setVisibility(View.VISIBLE);
+                        lv_safenumbers.setVisibility(View.VISIBLE);
                         pb_loading.setVisibility(View.GONE);
                         tv_nodata.setVisibility(View.GONE);
                         //更新数据
@@ -180,10 +204,16 @@ public class TelSmsSafeActivity extends AppCompatActivity {
                         if (datas.size() != 0) {
                             Toast.makeText(getApplicationContext(), "没有更多数据", Toast.LENGTH_SHORT)
                                     .show();
+
+                            lv_safenumbers.setVisibility(View.VISIBLE);
+                            pb_loading.setVisibility(View.GONE);
+                            tv_nodata.setVisibility(View.GONE);
+                            //更新数据
+                            adapter.notifyDataSetChanged();
                             return;
                         }
                         tv_nodata.setVisibility(View.VISIBLE);
-                        lv_safenumber.setVisibility(View.GONE);
+                        lv_safenumbers.setVisibility(View.GONE);
                         pb_loading.setVisibility(View.GONE);
                     }
                     break;
@@ -211,7 +241,7 @@ public class TelSmsSafeActivity extends AppCompatActivity {
 
     private void initView() {
         setContentView(R.layout.activity_telsmssafe);
-        lv_safenumber = (ListView) findViewById(R.id.lv_telsms_safenumbers);
+        lv_safenumbers = (ListView) findViewById(R.id.lv_telsms_safenumbers);
         bt_addSafeNumber = (Button) findViewById(R.id.bt_telsms_addsafenumber);
         tv_nodata = (TextView) findViewById(R.id.tv_telsms_nodata);
         pb_loading = (ProgressBar) findViewById(R.id.pb_telsms_loading);
@@ -220,7 +250,7 @@ public class TelSmsSafeActivity extends AppCompatActivity {
         dao = new BlackDao(getApplicationContext());
         //黑名单适配器
         adapter = new MyAdapter();
-        lv_safenumber.setAdapter(adapter);
+        lv_safenumbers.setAdapter(adapter);
     }
 
     private class ItemView {
@@ -232,7 +262,13 @@ public class TelSmsSafeActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return datas.size();
+            int size = datas.size();
+            if (size == 0) {
+                tv_nodata.setVisibility(View.VISIBLE);
+                lv_safenumbers.setVisibility(View.GONE);
+                pb_loading.setVisibility(View.GONE);
+            }
+            return size;
         }
 
         @Override
@@ -297,8 +333,13 @@ public class TelSmsSafeActivity extends AppCompatActivity {
                             dao.delete(bean.getPhone());
 
                             datas.remove(position);
+                            //剩余数据少于10条或者用户删除的是最后一条数据，就加载更多数据
+                            if (datas.size() < 9 || position == datas.size()) {
+                                initData();
+                            } else {
+                                adapter.notifyDataSetChanged();
+                            }
 
-                            adapter.notifyDataSetChanged();
                         }
                     });
                     ab.setNegativeButton("取消", null);
@@ -310,16 +351,19 @@ public class TelSmsSafeActivity extends AppCompatActivity {
     }
 
     public void addBlackNumber(View v) {
-        //showInputBlacknumberDialog();
+
         showPopupWindow();
     }
 
-    private void showInputBlacknumberDialog() {
+    private void showInputBlacknumberDialog(String phone) {
         AlertDialog.Builder ab = new AlertDialog.Builder(this);
         View view = View.inflate(getApplicationContext(), R.layout.dialog_addblacknumber, null);
 
         final EditText et_blackNumber = (EditText) view.findViewById(R.id
                 .et_dialog_telsmssafe_blacknumber);
+        //设置初始的黑名单号码
+        et_blackNumber.setText(phone);
+
         final CheckBox cb_sms = (CheckBox) view.findViewById(R.id.cb_telsmssafe_smsmode);
         final CheckBox cb_phone = (CheckBox) view.findViewById(R.id.cb_telsmssafe_phonemode);
 
@@ -362,9 +406,11 @@ public class TelSmsSafeActivity extends AppCompatActivity {
 
                 //让listView显示第一条数据
                 adapter = new MyAdapter();
-                lv_safenumber.setAdapter(adapter);
+                lv_safenumbers.setAdapter(adapter);
                 dialog.dismiss();
-
+                lv_safenumbers.setVisibility(View.VISIBLE);
+                pb_loading.setVisibility(View.GONE);
+                tv_nodata.setVisibility(View.GONE);
             }
         });
 

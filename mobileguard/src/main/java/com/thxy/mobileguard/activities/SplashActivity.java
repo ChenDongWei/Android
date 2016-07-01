@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,6 +37,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -68,10 +70,65 @@ public class SplashActivity extends Activity {
         initData();
         //初始化动画
         initAnimation();
+        //拷贝数据库
+        copyDB("address.db");
         //timeInitialization()方法如下：
     }
 
-    private void timeInitialization(){
+    /**
+     * 把assert目录下的文件拷贝到本地(/data/data/包名/files)
+     *
+     * @param dbName assert目录下的文件名
+     */
+    private void copyDB(final String dbName) {
+        new Thread() {
+            @Override
+            public void run() {
+                //判断文件是否存在,如果存在不需要拷贝
+                File file = new File("/data/data/" + getPackageName() + "/files/" + dbName);
+                if (file.exists()){
+                    return;
+                }
+                //文件的拷贝
+                try {
+                    fileCopy(dbName);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+    }
+
+    private void fileCopy(String dbName) throws IOException {
+        //输入流
+        AssetManager assets = getAssets();
+        //读取saaert的文件，转换成InputStream
+        InputStream is = assets.open(dbName);
+        //输出流
+        FileOutputStream fos = openFileOutput(dbName, MODE_PRIVATE);
+        //流的拷贝,定义缓冲区大小
+        byte[] buffer = new byte[10240];
+        //读取的长度
+        int len = is.read(buffer);
+        int counts = 1;
+        //循环读取，如果读到文件尾部，返回-1
+        while (len != -1) {
+            //把缓冲区的数据写到输出流
+            fos.write(buffer, 0, len);
+            //每100k刷新缓冲区
+            if (counts % 10 == 0) {
+                fos.flush();
+            }
+            //继续读取
+            len = is.read(buffer);
+            counts++;
+        }
+        fos.flush();
+        fos.close();
+        is.close();
+    }
+
+    private void timeInitialization() {
         if (SpTools.getBoolean(getApplicationContext(), MyConstants.AUTOUPDATE, false)) {
             //检测服务器版本
             checkVersion();
@@ -394,7 +451,7 @@ public class SplashActivity extends Activity {
                 if (!SpTools.getBoolean(getApplicationContext(), MyConstants.AUTOUPDATE, false)) {
                     //不做版本更新，直接进入主界面
                     loadMain();
-                }else {
+                } else {
                     //界面衔接由自动更新完成，这里不作处理
                 }
             }
