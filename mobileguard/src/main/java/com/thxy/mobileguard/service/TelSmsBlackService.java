@@ -27,7 +27,7 @@ import java.lang.reflect.Method;
 public class TelSmsBlackService extends Service {
     private SmsReceiver receiver;
     private BlackDao dao;
-    private PhoneStateListener listner;
+    private PhoneStateListener listener;
     private TelephonyManager tm;
 
     @Override
@@ -71,7 +71,7 @@ public class TelSmsBlackService extends Service {
         //注册电话的监听
         tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         //监听电话的状态
-        listner = new PhoneStateListener() {
+        listener = new PhoneStateListener() {
             /**
              * 监听电话的状态
              * @param state
@@ -115,34 +115,42 @@ public class TelSmsBlackService extends Service {
             }
         };
         //注册电话监听
-        tm.listen(listner, PhoneStateListener.LISTEN_CALL_STATE);
+        tm.listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
         super.onCreate();
     }
 
-    private void deleteCalllog(String incomingNumber) {
+    protected void deleteCalllog(String incomingNumber) {
         Uri uri = Uri.parse("content://call_log/calls");
         //删除日志
         getContentResolver().delete(uri, "number=?", new String[]{incomingNumber});
     }
 
 
-    private void endCall() {
+    protected void endCall() {
         //反射调用实现ServiceManager.getService();
         try {
             Class clazz = Class.forName("android.os.ServiceManager");
             Method method = clazz.getDeclaredMethod("getService", String.class);
-            IBinder binder = (IBinder) method.invoke(null, Context.TELECOM_SERVICE);
+            IBinder binder = (IBinder) method.invoke(null, Context.TELEPHONY_SERVICE);
             ITelephony iTelephony = ITelephony.Stub.asInterface(binder);
             iTelephony.endCall();//挂断电话
         } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (RemoteException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -150,7 +158,7 @@ public class TelSmsBlackService extends Service {
     @Override
     public void onDestroy() {
         //取消电话监听
-        tm.listen(listner, PhoneStateListener.LISTEN_NONE);
+        tm.listen(listener, PhoneStateListener.LISTEN_NONE);
         //取消短信监听
         unregisterReceiver(receiver);
         super.onDestroy();

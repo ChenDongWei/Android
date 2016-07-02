@@ -26,4 +26,12 @@
         thxy:mtitle="黑名单拦截设置">
     </com.thxy.mobileguard.view.SettingCenterItemView>
 
+    <com.thxy.mobileguard.view.SettingCenterItemView
+        android:id="@+id/sciv_setting_center_phonelocationservice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        thxy:mcontent="来电归属地设置已经关闭-来电归属地设置已经打开"
+        thxy:mtitle="来电归属地设置">
+    </com.thxy.mobileguard.view.SettingCenterItemView>
+
 </LinearLayout>

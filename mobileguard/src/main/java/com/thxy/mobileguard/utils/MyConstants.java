@@ -13,4 +13,6 @@ public interface MyConstants {
     String LOSTFIND = "lostfind";//开机是否开启手机防盗
     String LOSTFINDNAME = "lostfindname";//手机防盗名
     String AUTOUPDATE = "autoupdate";//自动更新设置
+    String TOASTX = "toastx";//自定义吐司X坐标
+    String TOASTY = "toasty";//自定义吐司Y坐标
 }
