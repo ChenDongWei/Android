@@ -15,4 +15,6 @@ public interface MyConstants {
     String AUTOUPDATE = "autoupdate";//自动更新设置
     String TOASTX = "toastx";//自定义吐司X坐标
     String TOASTY = "toasty";//自定义吐司Y坐标
+    String STYLEBGINDEX = "styleindex";//来电归属地背景样式
+
 }

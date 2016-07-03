@@ -1,9 +1,14 @@
 package com.thxy.mobileguard.activities;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.thxy.mobileguard.R;
 import com.thxy.mobileguard.service.ComingPhoneService;
@@ -17,6 +22,12 @@ public class SettingCenterActivity extends Activity {
     private SettingCenterItemView sciv_autoupdate;
     private SettingCenterItemView sciv_blackservice;
     private SettingCenterItemView sciv_phoneLocationService;
+    private TextView tv_locationStyle_content;
+    private ImageView iv_changeStyle;
+    private String[] styleNames = new String[]{"卫士蓝", "金属灰", "苹果绿", "活力橙",
+            "半透明"};
+    private AlertDialog dialog;
+    private RelativeLayout rl_style_root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +53,20 @@ public class SettingCenterActivity extends Activity {
     }
 
     private void initEvent() {
+        //归属地根布局点击事件
+        rl_style_root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showStyleDialog();
+            }
+        });
+        //箭头的点击事件
+        iv_changeStyle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showStyleDialog();
+            }
+        });
         //来电归属地服务启动和关闭
         sciv_phoneLocationService.setItemClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +121,26 @@ public class SettingCenterActivity extends Activity {
         });
     }
 
+    private void showStyleDialog() {
+        //通过对话框让用户选择样式
+        AlertDialog.Builder ab = new AlertDialog.Builder(SettingCenterActivity.this);
+        ab.setTitle("选择来电归属地样式");
+        ab.setSingleChoiceItems(styleNames, Integer.parseInt(SpTools.getString
+                (getApplicationContext(), MyConstants.STYLEBGINDEX, "0")), new
+                DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //字符串的方式保存归属地样式
+                        SpTools.putString(getApplicationContext(), MyConstants.STYLEBGINDEX,
+                                which + "");
+                        tv_locationStyle_content.setText(styleNames[which]);
+                        dialog.dismiss();
+                    }
+                });
+        dialog = ab.create();
+        dialog.show();
+    }
+
     private void initView() {
         setContentView(R.layout.activity_settingcenter);
         sciv_autoupdate = (SettingCenterItemView) findViewById(R.id
@@ -107,6 +152,14 @@ public class SettingCenterActivity extends Activity {
         sciv_phoneLocationService = (SettingCenterItemView) findViewById(R.id
                 .sciv_setting_center_phonelocationservice);
 
+        rl_style_root = (RelativeLayout) findViewById(R.id
+                .rl_settingcenter_locationstyle_root);
+
+        tv_locationStyle_content = (TextView) findViewById(R.id
+                .tv_settingcenter_locationstyle_content);
+
+        iv_changeStyle = (ImageView) findViewById(R.id
+                .iv_settingcenter_locationstyle_select);
 
     }
 

@@ -34,4 +34,45 @@
         thxy:mtitle="来电归属地设置">
     </com.thxy.mobileguard.view.SettingCenterItemView>
 
+    <RelativeLayout
+        android:id="@+id/rl_settingcenter_locationstyle_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/gray"
+        android:clickable="true">
+
+        <TextView
+            android:id="@+id/tv_settingcenter_locationstyle_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="归属地显示风格"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/tv_settingcenter_locationstyle_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_settingcenter_locationstyle_title"
+            android:layout_margin="5dp"
+            android:textSize="18sp"/>
+
+        <ImageView
+            android:id="@+id/iv_settingcenter_locationstyle_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:clickable="false"
+            android:src="@drawable/iv_jiantou_selector"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_below="@id/tv_settingcenter_locationstyle_content"
+            android:background="@drawable/list_devider"/>
+    </RelativeLayout>
+
+
 </LinearLayout>
