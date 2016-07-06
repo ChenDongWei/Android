@@ -1,14 +1,24 @@
 package com.thxy.mobileguard.engine;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.SystemClock;
 
+import com.thxy.mobileguard.utils.EncryptTools;
+import com.thxy.mobileguard.utils.JsonStrTools;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 /**
@@ -17,19 +27,19 @@ import java.io.PrintWriter;
  */
 public class SmsEngine {
 
-    public  interface BackupsProgress{
+    public interface BackupsProgress {
         /**
          * 进度的显示回调
          */
         void show();
 
         /**
-         * @param max   回调显示进度的最大值
+         * @param max 回调显示进度的最大值
          */
         void setMax(int max);
 
         /**
-         * @param progress  回调显示当前进度
+         * @param progress 回调显示当前进度
          */
         void setProgress(int progress);
 
@@ -43,83 +53,177 @@ public class SmsEngine {
         int progress;
     }
 
-    public static void smsBackupsJson(Activity context, final BackupsProgress pd) {
-        //通过内容提供者获取短信
-        Uri uri = Uri.parse("content://sms");
-        //获取短信记录游标
-        final Cursor cursor = context.getContentResolver().query(uri, new String[]{"address",
-                "date",
-                "body", "type"}, null, null, "_id desc");
-        //写到文件中
-        File file = new File(Environment.getExternalStorageDirectory(), "sms.json");
+    /**
+     * 通过子线程进行短信还原（json格式）
+     *
+     * @param context
+     * @param pd
+     */
+    public static void smsResumnJson(final Activity context, final BackupsProgress pd) {
+        final Data data = new Data();
+        new Thread() {
+            @Override
+            public void run() {
+                //通过内容提供者保存短信
+                Uri uri = Uri.parse("content://sms");
 
+                //获取备份的短信
+                try {
+                    FileInputStream fis = new FileInputStream(new File(Environment
+                            .getExternalStorageDirectory(), "sms.json"));
+                    //json数据的合并
+                    StringBuilder jsonSmsStr = new StringBuilder();
+                    //io流的封装，把字节流封装成缓冲字符流
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(file);
-
-            PrintWriter out = new PrintWriter(fos);
-            context.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    //进度条的总进度
-                    pd.show();
-                    pd.setMax(cursor.getCount());
-                }
-            });
-
-            final Data data = new Data();
-
-            //写根标记     {"count":"10"
-            out.println("{\"count\":\"" + cursor.getCount()  + "\"");
-            // ,"smses":[
-            out.println(",\"smses\":[");
-            while (cursor.moveToNext()) {
-                data.progress++;
-                SystemClock.sleep(300);//模拟进度条显示效果
-                //取短信，封装成json标记
-                if (cursor.getPosition() == 0) {
-                    out.println("{");
-                } else {
-                    out.println(",{");
-                }
-
-                //address 封装  "address":"hello"
-                out.println("\"address\":\"" + cursor.getString(0) + "\"," );
-                //date 封装
-                out.println("\"date\":\"" + cursor.getString(1) + "\"," );
-                //body 封装
-                out.println("\"body\":\"" + cursor.getString(2) + "\"," );
-                //type 封装
-                out.println("\"type\":\"" + cursor.getString(3) + "\"" );
-
-                out.println("}");
-
-                context.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        pd.setProgress(data.progress);
+                    String line = reader.readLine();
+                    while (line != null) {
+                        jsonSmsStr.append(line);
+                        line = reader.readLine();
                     }
-                });
+                    //解析json数据
+                    JSONObject jsonObj = new JSONObject(jsonSmsStr.toString());
+                    //短信的条目数
+                    final int counts = Integer.parseInt(jsonObj.getString("count"));
+                    //设置回调结果的show和setMax方法
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            pd.show();
+                            pd.setMax(counts);
+                        }
+                    });
+                    //循环读取短信
+                    JSONArray jarray = (JSONArray) jsonObj.get("smses");
+                    for (int i = 0; i < counts; i++) {
+                        data.progress = i;
+                        //获取一条短信
+                        JSONObject smsjson = jarray.getJSONObject(i);
 
-            }
-
-            context.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    pd.end();
+                        ContentValues values = new ContentValues();
+                        values.put("address", smsjson.getString("address"));
+                        values.put("body", EncryptTools.decryption(smsjson
+                                .getString("body")));
+                        values.put("date", smsjson.getString("date"));
+                        values.put("type", smsjson.getString("type"));
+                        //往短信数据库中加一条数据
+                        context.getContentResolver().insert(uri, values);
+                        //回调结果当前的数据
+                        context.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                pd.setProgress(data.progress);
+                            }
+                        });
+                    }
+                    reader.close();
+                    //回调备份完成的结果
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            pd.end();
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            });
+            }
+        }.start();
+    }
 
-            //写根标记结束标记
-            out.println("]}");
+    /**
+     * 通过子线程来做短信备份
+     *
+     * @param context
+     * @param pd      通过接口回调备份数据（所有回调方法都在主线程执行）
+     */
+    public static void smsBackupsJson(final Activity context, final BackupsProgress pd) {
+        new Thread() {
+            @Override
+            public void run() {
+                //通过内容提供者获取短信
+                Uri uri = Uri.parse("content://sms");
+                //获取短信记录游标
+                final Cursor cursor = context.getContentResolver().query(uri, new
+                        String[]{"address",
+                        "date",
+                        "body", "type"}, null, null, "_id desc");
+                //写到文件中
+                File file = new File(Environment.getExternalStorageDirectory(), "sms.json");
 
-            out.flush();
-            out.close();
-            cursor.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+
+                FileOutputStream fos = null;
+                try {
+                    fos = new FileOutputStream(file);
+
+                    PrintWriter out = new PrintWriter(fos);
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //进度条的总进度
+                            pd.show();
+                            pd.setMax(cursor.getCount());
+                        }
+                    });
+
+                    final Data data = new Data();
+
+                    //写根标记     {"count":"10"
+                    out.println("{\"count\":\"" + cursor.getCount() + "\"");
+                    // ,"smses":[
+                    out.println(",\"smses\":[");
+                    while (cursor.moveToNext()) {
+                        data.progress++;
+                        SystemClock.sleep(300);//模拟进度条显示效果
+                        //取短信，封装成json标记
+                        if (cursor.getPosition() == 0) {
+                            out.println("{");
+                        } else {
+                            out.println(",{");
+                        }
+
+                        //address 封装  "address":"hello"
+                        out.println("\"address\":\"" + cursor.getString(0) + "\",");
+                        //date 封装
+                        out.println("\"date\":\"" + cursor.getString(1) + "\",");
+                        //body 封装
+                        //对短信加密
+                        String mbody = EncryptTools.encrypt(JsonStrTools.changeStr(cursor
+                                .getString(2)));
+                        out.println("\"body\":\"" + mbody + "\",");
+                        //type 封装
+                        out.println("\"type\":\"" + cursor.getString(3) + "\"");
+
+                        out.println("}");
+
+                        context.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                pd.setProgress(data.progress);
+                            }
+                        });
+
+                    }
+
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            pd.end();
+                        }
+                    });
+
+                    //写根标记结束标记
+                    out.println("]}");
+
+                    out.flush();
+                    out.close();
+                    cursor.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+
     }
 
     public static void smsBackupsXml(Activity context, final BackupsProgress pd) {

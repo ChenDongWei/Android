@@ -1,9 +1,15 @@
 package com.thxy.mobileguard.service;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.PixelFormat;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.SystemClock;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.Gravity;
@@ -33,6 +39,7 @@ public class ComingPhoneService extends Service {
             R.drawable.call_locate_orange,
             R.drawable.call_locate_white
     };
+    private OutCallReceiver outCallReceiver;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -40,8 +47,33 @@ public class ComingPhoneService extends Service {
         return null;
     }
 
+    /**
+     * 是否是外拨电话
+     */
+    private boolean isOutCall = false;
+
+    /**
+     * 外拨电话的广播
+     */
+    private class OutCallReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            isOutCall = true;
+            //获取外拨的电话号码
+            String phoneNumber = getResultData();
+            showLocationToast(phoneNumber);
+        }
+    }
+
     @Override
     public void onCreate() {
+        //监控外拨电话，注册广播
+        outCallReceiver = new OutCallReceiver();
+        IntentFilter filter = new IntentFilter("android.intent.action.NEW_OUTGOING_CALL");
+        //注册外拨电话的广播
+        registerReceiver(outCallReceiver, filter);
+
         //初始化窗体管理器
         wm = (WindowManager) getSystemService(WINDOW_SERVICE);
         //初始化吐司的参数
@@ -98,16 +130,42 @@ public class ComingPhoneService extends Service {
         params.setTitle("Toast");
     }
 
-    protected void closeLocationToast() {
-        //初始先执行一次
-        if (view != null) {
-            wm.removeView(view);
-            view = null;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (view != null) {
+                wm.removeView(view);
+                view = null;
+            }
         }
+    };
 
+    protected void closeLocationToast() {
+        if (isOutCall) {
+            //延迟关闭土司
+            new Thread() {
+                @Override
+                public void run() {
+                    SystemClock.sleep(5000);
+                    //发送消息关闭土司
+                    handler.obtainMessage().sendToTarget();
+                }
+            }.start();
+            isOutCall = false;
+        } else {
+            //初始先执行一次
+            if (view != null) {
+                wm.removeView(view);
+                view = null;
+            }
+        }
     }
 
     protected void showLocationToast(String incomingNumber) {
+        //如果不是外拨电话，直接关闭
+        if (!isOutCall) {
+            closeLocationToast();
+        }
         //显示自定义吐司
         view = View.inflate(getApplicationContext(), R.layout.sys_toast, null);
         int index = Integer.parseInt(SpTools.getString(getApplicationContext(), MyConstants
@@ -178,6 +236,8 @@ public class ComingPhoneService extends Service {
     public void onDestroy() {
         //取消电话状态监听
         tm.listen(listener, PhoneStateListener.LISTEN_NONE);
+        //取消外拨电话注册广播
+        unregisterReceiver(outCallReceiver);
         super.onDestroy();
     }
 }

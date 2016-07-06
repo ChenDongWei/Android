@@ -75,7 +75,7 @@ public class LocationService extends Service {
 
                 String safeNumber = SpTools.getString(LocationService.this, MyConstants
                         .SAFENUMBER, "");
-                safeNumber = EncryptTools.decryption(MyConstants.MUSIC, safeNumber);
+                safeNumber = EncryptTools.decryption(safeNumber);
                 //发送短信给安全号码
                 SmsManager sm = SmsManager.getDefault();
                 sm.sendTextMessage(safeNumber, "", tv_mess + "", null, null);

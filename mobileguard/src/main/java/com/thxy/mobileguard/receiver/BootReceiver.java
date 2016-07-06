@@ -30,7 +30,7 @@ public class BootReceiver extends BroadcastReceiver {
             //SIM卡发生变化，对安全号码发送短信，安全号码肯定存在
             String safeNumber = SpTools.getString(context, MyConstants.SAFENUMBER, "");
             //解密安全号码
-            safeNumber = EncryptTools.decryption(MyConstants.MUSIC, safeNumber);
+            safeNumber = EncryptTools.decryption(safeNumber);
             SmsManager sm = SmsManager.getDefault();
             sm.sendTextMessage(safeNumber, "", "我是小偷", null, null);
         }

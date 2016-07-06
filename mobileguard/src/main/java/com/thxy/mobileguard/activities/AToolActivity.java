@@ -31,37 +31,68 @@ public class AToolActivity extends Activity {
      * @param v
      */
     public void smsBackups(View v) {
-        new Thread() {
+
+        SmsEngine.smsBackupsJson(AToolActivity.this, new SmsEngine.BackupsProgress() {
             @Override
-            public void run() {
-
-                SmsEngine.smsBackupsJson(AToolActivity.this, new SmsEngine.BackupsProgress() {
-                    @Override
-                    public void show() {
-                        pd.show();
-                        pb_bk.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void setMax(int max) {
-                        pd.setMax(max);
-                        pb_bk.setMax(max);
-                    }
-
-                    @Override
-                    public void setProgress(int progress) {
-                        pd.setProgress(progress);
-                        pb_bk.setProgress(progress);
-                    }
-
-                    @Override
-                    public void end() {
-                        pd.dismiss();
-                        pb_bk.setVisibility(View.GONE);
-                    }
-                });
+            public void show() {
+                pd.show();
+                pb_bk.setVisibility(View.VISIBLE);
             }
-        }.start();
+
+            @Override
+            public void setMax(int max) {
+                pd.setMax(max);
+                pb_bk.setMax(max);
+            }
+
+            @Override
+            public void setProgress(int progress) {
+                pd.setProgress(progress);
+                pb_bk.setProgress(progress);
+            }
+
+            @Override
+            public void end() {
+                pd.dismiss();
+                pb_bk.setVisibility(View.GONE);
+            }
+        });
+
+    }
+
+    /**
+     * 短信还原
+     *
+     * @param v
+     */
+    public void smsResumn(View v) {
+        SmsEngine.smsResumnJson(this, new SmsEngine.BackupsProgress() {
+            @Override
+            public void setProgress(int progress) {
+                // TODO Auto-generated method stub
+                //ui程序员可以显示自己 组件
+                pd.setProgress(progress);
+                pb_bk.setProgress(progress);
+            }
+
+            @Override
+            public void setMax(int max) {
+                pd.setMax(max);
+                pb_bk.setMax(max);
+            }
+
+            @Override
+            public void show() {
+                pd.show();
+                pb_bk.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void end() {
+                pd.dismiss();
+                pb_bk.setVisibility(View.GONE);
+            }
+        });
     }
 
     /**

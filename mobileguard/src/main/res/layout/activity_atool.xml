@@ -51,6 +51,7 @@
         android:clickable="true"
         android:drawableLeft="@android:drawable/btn_star_big_on"
         android:gravity="center_vertical"
+        android:onClick="smsResumn"
         android:text="短信还原"
         android:textColor="@color/black"
         android:textSize="20sp"/>

@@ -86,6 +86,11 @@ public class HomeActivity extends Activity {
                         Intent atool = new Intent(HomeActivity.this, AToolActivity.class);
                         startActivity(atool);
                         break;
+                    case 2:
+                        //软件管家
+                        Intent pmanager = new Intent(HomeActivity.this, AppManagerActivity.class);
+                        startActivity(pmanager);
+                        break;
 
                     case 1:
                         //通讯卫士
