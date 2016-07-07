@@ -83,6 +83,9 @@ public class AppManagerEngine {
                 bean.setSd(false);
             }
 
+            //添加apk的路径
+            bean.setApkPath(packageInfo.applicationInfo.sourceDir);
+
             //添加一个apk信息
             apks.add(bean);
         }

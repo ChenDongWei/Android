@@ -16,5 +16,6 @@ public interface MyConstants {
     String TOASTX = "toastx";//自定义吐司X坐标
     String TOASTY = "toasty";//自定义吐司Y坐标
     String STYLEBGINDEX = "styleindex";//来电归属地背景样式
+    String SHOWSYSTEM = "showsystem";//显示系统进程
 
 }

@@ -75,17 +75,22 @@ public class HomeActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 8:
-                    {
                         //设置中心
                         Intent setting = new Intent(HomeActivity.this, SettingCenterActivity.class);
                         startActivity(setting);
                         break;
-                    }
+
                     case 7:
                         //高级工具
                         Intent atool = new Intent(HomeActivity.this, AToolActivity.class);
                         startActivity(atool);
                         break;
+                    case 3:
+                        //进程管理
+                        Intent tmanager = new Intent(HomeActivity.this, TastManagerActivity.class);
+                        startActivity(tmanager);
+                        break;
+
                     case 2:
                         //软件管家
                         Intent pmanager = new Intent(HomeActivity.this, AppManagerActivity.class);
@@ -94,8 +99,8 @@ public class HomeActivity extends Activity {
 
                     case 1:
                         //通讯卫士
-                        Intent setting = new Intent(HomeActivity.this, TelSmsSafeActivity.class);
-                        startActivity(setting);
+                        Intent telsafe = new Intent(HomeActivity.this, TelSmsSafeActivity.class);
+                        startActivity(telsafe);
                         break;
                     case 0:
                         //手机防盗

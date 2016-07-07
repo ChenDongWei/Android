@@ -1,5 +1,6 @@
 package com.thxy.mobileguard.service;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,6 +16,7 @@ import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 
 import com.android.internal.telephony.ITelephony;
+import com.thxy.mobileguard.R;
 import com.thxy.mobileguard.dao.BlackDao;
 import com.thxy.mobileguard.domain.BlackTable;
 
@@ -58,6 +60,11 @@ public class TelSmsBlackService extends Service {
 
     @Override
     public void onCreate() {
+        //提高服务运行级别
+        /*Notification noti = new Notification.Builder(getApplicationContext()).setContentTitle("手机卫士").setContentText("天院卓越手机卫士").setSmallIcon(R.drawable.ic_launcher).build();
+        //设置成前台进程
+        startForeground(110, noti);*/
+        //初始化黑名单
         dao = new BlackDao(getApplicationContext());
         //注册短信的监听
         receiver = new SmsReceiver();

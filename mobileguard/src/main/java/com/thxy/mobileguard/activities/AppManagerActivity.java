@@ -28,13 +28,18 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.stericson.RootTools.RootTools;
+import com.stericson.RootTools.RootToolsException;
 import com.thxy.mobileguard.R;
 import com.thxy.mobileguard.domain.AppBean;
 import com.thxy.mobileguard.engine.AppManagerEngine;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 /**
  * 软件管家的页面
@@ -181,14 +186,40 @@ public class AppManagerActivity extends AppCompatActivity {
     }
 
     private void removeApk() {
-        if (!clickBean.isSystem()){
+        if (!clickBean.isSystem()) {
             //卸载用户apk
             Intent intent = new Intent("android.intent.action.DELETE");
             intent.addCategory("android.intent.category.DEFAULT");
             intent.setData(Uri.parse("package:" + clickBean.getPackName()));
             startActivity(intent);
             //刷新数据。注册删除数据广播，通过广播来更新数据
-        }else {
+        } else {
+            //系统app，默认不能删除,root刷机并赋予root权限才可以删除
+
+            try {
+                //判断是否root刷机
+                if (!RootTools.isRootAvailable()) {
+                    Toast.makeText(getApplicationContext(), "请先进行root刷机", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                //是否root授权给当前apk
+                if (!RootTools.isAccessGiven()){
+                    Toast.makeText(getApplicationContext(), "请先授予root权限", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                //直接使用命令删除apk
+                RootTools.sendShell("mount -o remount rw /system", 8000);//设置命令的超时时间为8秒
+                System.out.println("安装路径:" + clickBean.getApkPath());
+                RootTools.sendShell("rm -r " + clickBean.getApkPath(), 8000);
+                RootTools.sendShell("mount -o remount r /system", 8000);
+
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            } catch (RootToolsException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         }
 

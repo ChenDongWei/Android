@@ -11,9 +11,9 @@ public class AppBean {
     private String appName;//apk的名字
     private long size;//占用空间的大小 byte
     private boolean isSd;//是否存在sd卡
-
     private boolean isSystem;//是否是系统apk
     private String packName;//apk的包名
+    private String apkPath;//apk的安装路径
 
     public Drawable getIcon() {
         return icon;
@@ -61,5 +61,13 @@ public class AppBean {
 
     public void setPackName(String packName) {
         this.packName = packName;
+    }
+
+    public String getApkPath() {
+        return apkPath;
+    }
+
+    public void setApkPath(String apkPath) {
+        this.apkPath = apkPath;
     }
 }
