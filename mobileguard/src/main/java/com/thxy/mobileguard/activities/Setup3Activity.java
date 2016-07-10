@@ -35,6 +35,7 @@ public class Setup3Activity extends BaseSetupActivity {
 
     /**
      * 从手机联系人获取安全号码
+     *
      * @param v
      */
     public void selectSafeNumber(View v) {
@@ -44,8 +45,11 @@ public class Setup3Activity extends BaseSetupActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (data != null){
+        if (data != null) {
             String phone = data.getStringExtra(MyConstants.SAFENUMBER);
+            if (TextUtils.isEmpty(phone)) {
+                Toast.makeText(getApplicationContext(), "没有选择联系人", Toast.LENGTH_SHORT).show();
+            }
             et_safeNumber.setText(phone);
         }
         super.onActivityResult(requestCode, resultCode, data);

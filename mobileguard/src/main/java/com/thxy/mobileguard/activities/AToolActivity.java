@@ -96,6 +96,16 @@ public class AToolActivity extends Activity {
     }
 
     /**
+     * 程序锁
+     *
+     * @param v
+     */
+    public void lockActivity(View v) {
+        Intent lock = new Intent(AToolActivity.this, LockActivity.class);
+        startActivity(lock);
+    }
+
+    /**
      * 号码归属地查询
      *
      * @param v

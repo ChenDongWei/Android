@@ -83,6 +83,12 @@ public abstract class BaseFriendsCallSmsActivity extends ListActivity {
                         pd.dismiss();
                         pd = null;
                     }
+                    if (datas.size() == 0){
+                        Intent datas = new Intent();
+                        datas.putExtra(MyConstants.SAFENUMBER, "");
+                        setResult(1, datas);
+                        finish();
+                    }
 
                     //把数据显示在listview中
                     adapter.notifyDataSetChanged();

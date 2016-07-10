@@ -44,7 +44,8 @@
         <activity android:name=".activities.HomeActivity">
             <intent-filter>
                 <action android:name="com.thxy.HomeActivity"/>
-                <category android:name="android.intent.category.DEFAULT"></category>
+
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
@@ -119,6 +120,19 @@
             android:label="@string/title_activity_task_manager_setting"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".activities.LockActivity"
+            android:label="@string/title_activity_lock"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <!--
+        <activity
+            android:name=".activities.WatchDogEnterPassActivity"
+            android:label="@string/title_activity_enter_pass"
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        -->
 
         <service
             android:name=".service.LostFindService"
@@ -145,6 +159,16 @@
             android:enabled="true"
             android:exported="true">
         </service>
+        <service
+            android:name=".service.AppWidgetService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
+        <service
+            android:name=".service.WatchDogService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
 
         <receiver android:name=".receiver.BootReceiver">
             <intent-filter>
@@ -164,6 +188,21 @@
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
             </intent-filter>
         </receiver>
+        <receiver android:name=".receiver.ExampleAppWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/example_appwidget_info"/>
+        </receiver>
+        <receiver android:name=".receiver.OnReceiver">
+            <intent-filter>
+                <action android:name="com.thxy.widget.cleartask"/>
+            </intent-filter>
+        </receiver>
+
 
     </application>
 

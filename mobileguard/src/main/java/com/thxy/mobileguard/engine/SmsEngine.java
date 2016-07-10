@@ -148,6 +148,9 @@ public class SmsEngine {
                         String[]{"address",
                         "date",
                         "body", "type"}, null, null, "_id desc");
+                if (cursor.getCount() == 0){
+                    return;
+                }
                 //写到文件中
                 File file = new File(Environment.getExternalStorageDirectory(), "sms.json");
 

@@ -46,6 +46,7 @@ public class TastManagerActivity extends AppCompatActivity {
     private long availMem = 0;//可用内存大小
     private long totalMem = 0;//总内存大小
     private ActivityManager am;
+    private InitDataClass initData;
     //系统进程的数据
     private List<TaskBean> sysTasks = new CopyOnWriteArrayList<TaskBean>();
     //用户进程的数据
@@ -54,10 +55,12 @@ public class TastManagerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //初始化数据的封装对象
+        initData = new InitDataClass();
         //初始化界面
         initView();
-        //设置数据
-        initData();
+        //设置数据子线程
+        //initData();
         //初始化事件
         initEvent();
     }
@@ -206,6 +209,8 @@ public class TastManagerActivity extends AppCompatActivity {
                 if (bean.getPackName().equals(getPackageName())) {
                     //显示的是自己
                     holder.cb_checked.setVisibility(View.GONE);
+                } else {
+                    holder.cb_checked.setVisibility(View.VISIBLE);
                 }
                 return convertView;
             }
@@ -259,32 +264,39 @@ public class TastManagerActivity extends AppCompatActivity {
         tv_meminfo.setText("可用/总内存：" + availMemFormatter + "/" + totalMemFormatter);
     }
 
+    private class InitDataClass{
+        public synchronized void initTheData(){
+            //发送加载数据进度的消息
+            handler.obtainMessage(LOADING).sendToTarget();
+
+            //加载数据
+            List<TaskBean> allTaskDatas = TaskManagerEngine.getAllRunningTaskInfos
+                    (getApplicationContext());
+            availMem = TaskManagerEngine.getAvailMemSize(getApplicationContext());
+            totalMem = TaskManagerEngine.getTotalMemSize(getApplicationContext());
+            sysTasks.clear();
+            userTasks.clear();
+            //分发数据
+            for (TaskBean taskBean : allTaskDatas) {
+                if (taskBean.isSystem()) {
+                    //系统进程
+                    sysTasks.add(taskBean);
+                } else {
+                    //用户进程
+                    userTasks.add(taskBean);
+                }
+            }
+            //加载数据完成
+            handler.obtainMessage(FINISH).sendToTarget();
+        }
+    }
+
     private void initData() {
         new Thread() {
             @Override
             public void run() {
-                //发送加载数据进度的消息
-                handler.obtainMessage(LOADING).sendToTarget();
-
-                //加载数据
-                List<TaskBean> allTaskDatas = TaskManagerEngine.getAllRunningTaskInfos
-                        (getApplicationContext());
-                availMem = TaskManagerEngine.getAvailMemSize(getApplicationContext());
-                totalMem = TaskManagerEngine.getTotalMemSize(getApplicationContext());
-                sysTasks.clear();
-                userTasks.clear();
-                //分发数据
-                for (TaskBean taskBean : allTaskDatas) {
-                    if (taskBean.isSystem()) {
-                        //系统进程
-                        sysTasks.add(taskBean);
-                    } else {
-                        //用户进程
-                        userTasks.add(taskBean);
-                    }
-                }
-                //加载数据完成
-                handler.obtainMessage(FINISH).sendToTarget();
+                //通过对象来初始化数据
+                initData.initTheData();
             }
         }.start();
     }

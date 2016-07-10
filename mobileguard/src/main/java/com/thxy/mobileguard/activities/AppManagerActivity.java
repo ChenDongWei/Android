@@ -1,5 +1,6 @@
 package com.thxy.mobileguard.activities;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.text.format.Formatter;
 import android.view.Gravity;
 import android.view.View;
@@ -44,7 +44,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * 软件管家的页面
  */
-public class AppManagerActivity extends AppCompatActivity {
+public class AppManagerActivity extends Activity {
     protected static final int LOADING = 1;
     protected static final int FINISH = 2;
     private TextView tv_sdAvail;
