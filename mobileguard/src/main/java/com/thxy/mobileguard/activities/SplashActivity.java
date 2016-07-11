@@ -70,8 +70,10 @@ public class SplashActivity extends Activity {
         initData();
         //初始化动画
         initAnimation();
-        //拷贝数据库
+        //拷贝手机归属地数据库
         copyDB("address.db");
+        //拷贝病毒数据库
+        copyDB("antivirus.db");
         //timeInitialization()方法如下：
     }
 

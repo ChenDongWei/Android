@@ -17,5 +17,6 @@ public interface MyConstants {
     String TOASTY = "toasty";//自定义吐司Y坐标
     String STYLEBGINDEX = "styleindex";//来电归属地背景样式
     String SHOWSYSTEM = "showsystem";//显示系统进程
-
+    String VIRUSVERSIONURL = "http://10.0.2.2:8080/VirusServer/servlet/getversion";//获取病毒库版本的url
+    String GETVIRUSVDATASURL = "http://10.0.2.2:8080/VirusServer/servlet/getviruses";//获取病毒库数据的url
 }

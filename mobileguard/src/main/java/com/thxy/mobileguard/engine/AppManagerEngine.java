@@ -86,6 +86,9 @@ public class AppManagerEngine {
             //添加apk的路径
             bean.setApkPath(packageInfo.applicationInfo.sourceDir);
 
+            //添加app的uid
+            bean.setUid(packageInfo.applicationInfo.uid);
+
             //添加一个apk信息
             apks.add(bean);
         }

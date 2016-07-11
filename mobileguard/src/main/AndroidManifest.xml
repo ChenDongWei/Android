@@ -133,6 +133,11 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         -->
+        <activity
+            android:name=".activities.ConnectivityActivity"
+            android:label="@string/title_activity_connectivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
 
         <service
             android:name=".service.LostFindService"
@@ -203,7 +208,11 @@
             </intent-filter>
         </receiver>
 
-
+        <activity
+            android:name=".activities.AntivirusActivity"
+            android:label="@string/title_activity_antivirus"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

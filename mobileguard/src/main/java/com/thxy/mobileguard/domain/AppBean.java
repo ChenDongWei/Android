@@ -14,6 +14,15 @@ public class AppBean {
     private boolean isSystem;//是否是系统apk
     private String packName;//apk的包名
     private String apkPath;//apk的安装路径
+    private int uid;
+
+    public int getUid() {
+        return uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
+    }
 
     public Drawable getIcon() {
         return icon;

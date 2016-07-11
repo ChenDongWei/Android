@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+
+    <ImageView
+        android:id="@+id/iv_connectivity_listview_item_icon"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:src="@drawable/app"/>
+
+    <TextView
+        android:id="@+id/tv_connectivity_listview_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_margin="5dp"
+        android:layout_toRightOf="@id/iv_connectivity_listview_item_icon"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="计算器"
+        android:textSize="24sp"/>
+
+
+    <ImageView
+        android:id="@+id/iv_connectivity_listview_seedetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:clickable="true"
+        android:src="@drawable/list_button_details_pressed"
+        />
+
+</RelativeLayout>

@@ -85,6 +85,18 @@ public class HomeActivity extends Activity {
                         Intent atool = new Intent(HomeActivity.this, AToolActivity.class);
                         startActivity(atool);
                         break;
+                    case 5:
+                        //病毒查杀
+                        Intent antivirus = new Intent(HomeActivity.this, AntivirusActivity.class);
+                        startActivity(antivirus);
+                        break;
+
+                    case 4:
+                        //流量统计
+                        Intent connectivity = new Intent(HomeActivity.this, ConnectivityActivity.class);
+                        startActivity(connectivity);
+                        break;
+
                     case 3:
                         //进程管理
                         Intent tmanager = new Intent(HomeActivity.this, TastManagerActivity.class);
