@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +19,7 @@ import com.cdw.smartbeijing.domain.NewsTabBean.NewsData;
 import com.cdw.smartbeijing.domain.NewsTabBean.TopNews;
 import com.cdw.smartbeijing.utils.CacheUtils;
 import com.cdw.smartbeijing.utils.MyConstants;
+import com.cdw.smartbeijing.view.PullToRefreshListView;
 import com.cdw.smartbeijing.view.TopNewsViewPager;
 import com.google.gson.Gson;
 import com.lidroid.xutils.BitmapUtils;
@@ -48,7 +48,7 @@ public class TabDetailPager extends BaseMenuDetailPager {
     @ViewInject(R.id.tab_detail_indicator)
     private CirclePageIndicator mIndicator;
     @ViewInject(R.id.lv_tab_detail_list)
-    private ListView lvList;
+    private PullToRefreshListView lvList;
 
     private String mUrl;//请求得到的网络链接
     private ArrayList<TopNews> mTopNews;
@@ -76,6 +76,17 @@ public class TabDetailPager extends BaseMenuDetailPager {
         View mHeaderView = View.inflate(mActivity, R.layout.list_item_head, null);
         ViewUtils.inject(this, mHeaderView);
         lvList.addHeaderView(mHeaderView);
+
+        /**
+         * 5.前端界面设置回调
+         */
+        lvList.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //刷新数据
+                getDataFromService();
+            }
+        });
         return view;
     }
 
@@ -98,6 +109,9 @@ public class TabDetailPager extends BaseMenuDetailPager {
                 processData(result);
 
                 CacheUtils.setCache(mActivity, mUrl, result);
+
+                //收起下拉刷新控件
+                lvList.onRefreshComplete(true);
             }
 
             @Override
@@ -105,6 +119,9 @@ public class TabDetailPager extends BaseMenuDetailPager {
                 //请求失败
                 e.printStackTrace();
                 Toast.makeText(mActivity, s, Toast.LENGTH_SHORT).show();
+
+                //收起下拉刷新控件
+                lvList.onRefreshComplete(false);
             }
         });
     }

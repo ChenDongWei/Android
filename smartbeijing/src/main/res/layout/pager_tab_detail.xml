@@ -3,10 +3,10 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
-    <ListView
+    <com.cdw.smartbeijing.view.PullToRefreshListView
 	    android:id="@+id/lv_tab_detail_list"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:cacheColorHint="#ffffff">
-    </ListView>
+    </com.cdw.smartbeijing.view.PullToRefreshListView>
 </LinearLayout>
