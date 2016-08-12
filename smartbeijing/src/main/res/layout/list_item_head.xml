@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="180dp"
+              android:orientation="vertical">
+<FrameLayout
+	android:layout_width="match_parent"
+	android:layout_height="180dp">
+
+        <com.cdw.smartbeijing.view.TopNewsViewPager
+	        android:id="@+id/vp_top_news"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent">
+        </com.cdw.smartbeijing.view.TopNewsViewPager>
+
+        <RelativeLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="bottom"
+	        android:background="#aa000000"
+	        android:padding="5dp">
+
+            <TextView
+	            android:id="@+id/tv_tab_detail_title"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="标题"
+	            android:textColor="#ffffff"
+	            android:textSize="16sp"/>
+
+            <com.viewpagerindicator.CirclePageIndicator
+	            android:id="@+id/tab_detail_indicator"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentRight="true"
+	            android:layout_centerVertical="true"
+	            android:paddingLeft="1dp"
+	            app:fillColor="#ffff0000"
+	            app:pageColor="#cccccccc"
+	            app:radius="3dp"
+	            app:strokeWidth="0dp"/>
+        </RelativeLayout>
+    </FrameLayout>
+</LinearLayout>

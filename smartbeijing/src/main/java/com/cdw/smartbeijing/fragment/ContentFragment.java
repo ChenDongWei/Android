@@ -106,7 +106,11 @@ public class ContentFragment extends BaseFragment {
         setSlidingMenuEnable(false);
     }
 
-    private void setSlidingMenuEnable(boolean enable) {
+    /**
+     * 开启或禁用侧边栏
+     * @param enable
+     */
+    protected void setSlidingMenuEnable(boolean enable) {
         //获取侧边栏对象
         MainActivity mainUI = (MainActivity) mActivity;
         SlidingMenu slidingMenu = mainUI.getSlidingMenu();

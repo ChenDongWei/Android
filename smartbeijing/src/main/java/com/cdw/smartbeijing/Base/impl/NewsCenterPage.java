@@ -89,8 +89,8 @@ public class NewsCenterPage extends BasePager {
         //给侧边栏设置数据
         fragment.setMenuData(mNewsData.data);
         //初始化四个菜单详情页面
-        mMenuDetailPagers = new ArrayList<BaseMenuDetailPager>();
-        mMenuDetailPagers.add(new NewsMenuDetailPager(mActivity));
+        mMenuDetailPagers = new ArrayList<>();
+        mMenuDetailPagers.add(new NewsMenuDetailPager(mActivity, mNewsData.data.get(0).children));
         mMenuDetailPagers.add(new TopicMenuDetailPager(mActivity));
         mMenuDetailPagers.add(new PhotosMenuDetailPager(mActivity));
         mMenuDetailPagers.add(new InteractMenuDetailPager(mActivity));

@@ -20,7 +20,7 @@ public class InteractMenuDetailPager extends BaseMenuDetailPager {
     @Override
     public View initView() {
         TextView view = new TextView(mActivity);
-        view.setText("菜单详情页-互动");
+        view.setText("菜单详情页-专题");
         view.setTextColor(Color.RED);
         view.setTextSize(26);
         view.setGravity(Gravity.CENTER);

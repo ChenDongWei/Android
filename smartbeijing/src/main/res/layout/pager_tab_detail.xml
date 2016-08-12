@@ -2,14 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@android:color/black"
               android:orientation="vertical">
-
     <ListView
-        android:id="@+id/lv_left_list"
-        android:layout_marginTop="90dp"
-        android:divider="@null"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
+	    android:id="@+id/lv_tab_detail_list"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:cacheColorHint="#ffffff">
+    </ListView>
 </LinearLayout>
