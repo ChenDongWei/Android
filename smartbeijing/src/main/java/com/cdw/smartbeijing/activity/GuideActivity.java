@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.cdw.smartbeijing.R;
+import com.cdw.smartbeijing.utils.DensityUtils;
 import com.cdw.smartbeijing.utils.MyConstants;
 import com.cdw.smartbeijing.utils.PrefUtils;
 
@@ -124,7 +125,7 @@ public class GuideActivity extends Activity {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout
                     .LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             if (i > 0) {
-                params.leftMargin = 10;
+                params.leftMargin = DensityUtils.dp2px(10, this);
             }
             //设置布局对象
             point.setLayoutParams(params);

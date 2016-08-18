@@ -3,6 +3,7 @@ package com.cdw.smartbeijing.activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.WindowManager;
 
 import com.cdw.smartbeijing.R;
 import com.cdw.smartbeijing.fragment.ContentFragment;
@@ -23,7 +24,11 @@ public class MainActivity extends SlidingFragmentActivity {
         setBehindContentView(R.layout.left_menu);
         SlidingMenu slidingMenu = getSlidingMenu();
         slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);//全部可触摸
-        slidingMenu.setBehindOffset(300);//主屏幕预留300像素宽度
+        //slidingMenu.setBehindOffset(300);//主屏幕预留300像素宽度
+
+        WindowManager wm = getWindowManager();
+        int width = wm.getDefaultDisplay().getWidth();
+        slidingMenu.setBehindOffset(width * 450 / 768);
 
         initFragment();
     }

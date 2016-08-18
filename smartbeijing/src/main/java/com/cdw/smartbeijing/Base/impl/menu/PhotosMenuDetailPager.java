@@ -16,6 +16,7 @@ import com.cdw.smartbeijing.R;
 import com.cdw.smartbeijing.base.BaseMenuDetailPager;
 import com.cdw.smartbeijing.domain.PhotoBean;
 import com.cdw.smartbeijing.utils.CacheUtils;
+import com.cdw.smartbeijing.utils.MyBitmapUtils;
 import com.cdw.smartbeijing.utils.MyConstants;
 import com.google.gson.Gson;
 import com.lidroid.xutils.BitmapUtils;
@@ -90,11 +91,14 @@ public class PhotosMenuDetailPager extends BaseMenuDetailPager implements View.O
 
     class PhotoAdapter extends BaseAdapter{
 
-        private BitmapUtils mBitmapUtils;
+        //private BitmapUtils mBitmapUtils;
+        private MyBitmapUtils mBitmapUtils;
 
         public PhotoAdapter(){
-            mBitmapUtils = new BitmapUtils(mActivity);
-            mBitmapUtils.configDefaultLoadingImage(R.drawable.pic_item_list_default);
+            //mBitmapUtils = new BitmapUtils(mActivity);
+            //mBitmapUtils.configDefaultLoadingImage(R.drawable.pic_item_list_default);
+
+            mBitmapUtils = new MyBitmapUtils();
         }
         @Override
         public int getCount() {
