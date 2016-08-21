@@ -28,7 +28,7 @@ public class MainActivity extends SlidingFragmentActivity {
 
         WindowManager wm = getWindowManager();
         int width = wm.getDefaultDisplay().getWidth();
-        slidingMenu.setBehindOffset(width * 450 / 768);
+        slidingMenu.setBehindOffset(width * 468 / 768);
 
         initFragment();
     }
