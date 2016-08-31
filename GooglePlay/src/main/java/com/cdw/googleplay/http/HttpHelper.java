@@ -25,7 +25,7 @@ import java.io.InputStream;
 
 public class HttpHelper {
 
-	public static final String URL = "http://192.168.6.100:8080/GooglePlayServer/";
+	public static final String URL = "http://192.168.1.106:8080/GooglePlayServer/";
 
 	/** get请求，获取返回字符串内容 */
 	public static HttpResult get(String url) {

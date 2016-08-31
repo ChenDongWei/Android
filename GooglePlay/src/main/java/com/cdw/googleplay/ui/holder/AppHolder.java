@@ -14,10 +14,10 @@ import com.cdw.googleplay.utils.UIUtils;
 import com.lidroid.xutils.BitmapUtils;
 
 /**
- * 首页holder
+ * 应用holder
  * Created by dongwei on 2016/8/23.
  */
-public class HomeHolder extends BaseHolder<AppInfo> {
+public class AppHolder extends BaseHolder<AppInfo> {
 
     private TextView tvName;
     private TextView tvSize;

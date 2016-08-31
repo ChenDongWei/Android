@@ -1,7 +1,6 @@
 package com.cdw.googleplay.ui.fragment;
 
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cdw.googleplay.domain.AppInfo;
@@ -10,6 +9,7 @@ import com.cdw.googleplay.ui.adapter.MyBaseAdapter;
 import com.cdw.googleplay.ui.holder.BaseHolder;
 import com.cdw.googleplay.ui.holder.HomeHolder;
 import com.cdw.googleplay.ui.view.LoadingPage.ResultState;
+import com.cdw.googleplay.ui.view.MyListView;
 import com.cdw.googleplay.utils.UIUtils;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class HomeFragment extends BaseFragment {
     public View onCreateSuccessView() {
 //        TextView view = new TextView(UIUtils.getContext());
 //        view.setText(this.getClass().getSimpleName());
-        ListView view = new ListView(UIUtils.getContext());
+        MyListView view = new MyListView(UIUtils.getContext());
         view.setAdapter(new HomeAdapter(data));
         return view;
     }
