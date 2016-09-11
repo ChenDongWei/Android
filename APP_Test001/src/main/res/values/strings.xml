@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">APP_Test_001</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="stores_represent">门店代表</string>
+</resources>
